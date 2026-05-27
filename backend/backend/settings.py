@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-g=&@dq#b(@wi-q+%xlt$@y_j^=gal_!*l(q$hazxcc-0@)3ew6'
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "jobs",
     "corsheaders",
     "recruitment",
+    "drf_spectacular",
 ]
 
 REST_FRAMEWORK = {
@@ -53,6 +54,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": (
         "rest_framework.permissions.IsAuthenticated",
     ),
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema", 
 }
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -146,6 +148,6 @@ EMAIL_BACKEND_LIVE = True  # ✅ MUST BE TRUE
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'sandbox.smtp.mailtrap.io'  # From Mailtrap
 EMAIL_PORT = 2525                        # From Mailtrap
-EMAIL_HOST_USER = '5e8df1614504ec'  # Paste from Mailtrap
-EMAIL_HOST_PASSWORD = 'f6c60a343a3b39' # Paste from Mailtrap
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")  # Paste from Mailtrap
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD") # Paste from Mailtrap
 EMAIL_USE_TLS = True
