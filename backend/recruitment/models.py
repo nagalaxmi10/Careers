@@ -22,7 +22,7 @@ class CandidateResume(models.Model):
     match_percentage = models.FloatField(default=0)
     is_shortlisted = models.BooleanField(default=False)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-
+    fit_summary = models.TextField(blank=True)
     def __str__(self):
         return self.candidate_name or "Unknown Candidate"
 

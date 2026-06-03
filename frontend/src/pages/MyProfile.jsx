@@ -173,7 +173,7 @@ export default function MyProfile({ tab }) {
         <div style={s.field}>
           <label style={s.label}>Phone</label>
           {editingProfile
-            ? <input style={s.input} value={profileForm.phone} onChange={e => setPF("phone", e.target.value)} placeholder="+1 234 567 8900" />
+            ? <input style={s.input} value={profileForm.phone} onChange={e => setPF("phone", e.target.value)} placeholder="+91 9999999999" />
             : <div style={s.readOnly}>{profile.phone || "—"}</div>
           }
         </div>
@@ -197,7 +197,7 @@ export default function MyProfile({ tab }) {
           <div style={s.field}>
             <label style={s.label}>Emergency Phone</label>
             {editingProfile
-              ? <input style={s.input} value={profileForm.emergency_phone} onChange={e => setPF("emergency_phone", e.target.value)} placeholder="+1 234 567 8900" />
+              ? <input style={s.input} value={profileForm.emergency_phone} onChange={e => setPF("emergency_phone", e.target.value)} placeholder="+91 9999999999" />
               : <div style={s.readOnly}>{profile.emergency_phone || "—"}</div>
             }
           </div>

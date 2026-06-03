@@ -12,7 +12,8 @@ class JobRequestMiniSerializer(serializers.ModelSerializer):
 class CandidateResumeSerializer(serializers.ModelSerializer):
     job_request_details = JobRequestMiniSerializer(source="job_request", read_only=True)
     uploaded_by_email = serializers.EmailField(source="uploaded_by.email", read_only=True)
-
+    interview_status = serializers.SerializerMethodField()
+    
     class Meta:
         model = CandidateResume
         fields = [
@@ -20,13 +21,21 @@ class CandidateResumeSerializer(serializers.ModelSerializer):
             "uploaded_by", "uploaded_by_email",
             "resume", "candidate_name", "email", "phone",
             "skills", "experience", "resume_text",
-            "match_percentage", "is_shortlisted", "uploaded_at"
+            "match_percentage", "is_shortlisted", "uploaded_at", "fit_summary", "interview_status"
         ]
         read_only_fields = [
             "uploaded_by", "match_percentage", "is_shortlisted",
             "uploaded_at", "candidate_name", "email", "phone",
-            "skills", "experience", "resume_text"
+            "skills", "experience", "resume_text", "fit_summary", "interview_status"
         ]
+
+    # ✅ THIS FUNCTION MUST BE OUT HERE (Same level as class Meta, NOT inside it!)
+    def get_interview_status(self, obj):
+        from .models import ShortlistedCandidate
+        shortlist_obj = ShortlistedCandidate.objects.filter(candidate=obj).first()
+        if shortlist_obj:
+            return shortlist_obj.status
+        return "APPLIED" # Default status if not shortlisted yet
 
 
 class ShortlistedCandidateSerializer(serializers.ModelSerializer):

@@ -27,7 +27,6 @@ def _safe_float(value, default=0.0):
     except (TypeError, ValueError):
         return default
 
-
 def extract_text_from_file(file_path):
     ext = os.path.splitext(file_path)[1].lower()
 
@@ -108,7 +107,7 @@ def _regex_fallback(resume_text, required_skills):
     }
 
 
-def extract_with_ollama(resume_text, required_skills):
+def extract_with_ollama(resume_text, required_skills, job_context="", past_matches=""):
     import ollama
 
     MAX_CHARS = 6000
@@ -118,24 +117,18 @@ def extract_with_ollama(resume_text, required_skills):
     else:
         resume_chunk = resume_text
 
+    context_section = ""
+    if job_context:
+        context_section += f"\n═══════════════════════════════\nJOB CONTEXT\n═══════════════════════════════\n{job_context}\n"
+    if past_matches:
+        context_section += f"\n═══════════════════════════════\nPAST SUCCESSFUL MATCHES\n═══════════════════════════════\n{past_matches}\n"
+
     prompt = f"""You are an expert technical recruiter and resume parser.
+{context_section}
 
-Extract the following from the resume text below:
-1. Candidate full name
-2. Email address
-3. Phone number
-4. Total years of professional experience (as a number, 0 if fresher)
-5. ALL technical and professional skills — including:
-   - Skills explicitly listed
-   - Skills clearly implied by frameworks/tools used
-     (e.g. "PyTorch" implies "Machine Learning" and "Deep Learning")
-   - Skills demonstrated through projects
-     (e.g. "built an image classifier" implies "Computer Vision")
-   - Expanded forms of abbreviations
-     (e.g. "NLP" → also include "Natural Language Processing")
-   - Domain knowledge evident from the resume
-
-Be generous in skill extraction. A strong project-based resume should yield many skills.
+CRITICAL INSTRUCTION: Extract data ONLY from the text inside the <RESUME> tags below. 
+Do NOT extract name, email, or skills from the JOB CONTEXT or PAST MATCHES sections. 
+Those are provided ONLY for you to understand what skills to look for and calculate the FIT_SUMMARY.
 
 Respond ONLY in this exact format, no extra text, no explanations:
 NAME: <full name>
@@ -143,9 +136,12 @@ EMAIL: <email or blank>
 PHONE: <phone or blank>
 EXPERIENCE: <number>
 SKILLS: <comma separated list of all skills, be thorough>
+FIT_SUMMARY: <2-3 sentences: how well does this candidate fit the job context above?>
+LLM_SCORE: <integer 0-100>
 
-Resume:
+<RESUME>
 {resume_chunk}
+</RESUME>
 """
 
     model_name = getattr(settings, "OLLAMA_MODEL", "llama3")
@@ -157,6 +153,8 @@ Resume:
         "experience": 0.0,
         "skills": [],
         "score": 0.0,
+        "fit_summary": "",
+        "llm_score": 0,
     }
 
     try:
@@ -172,11 +170,34 @@ Resume:
         email  = re.search(r"EMAIL:\s*(.+)",         content)
         phone  = re.search(r"PHONE:\s*(.+)",         content)
         exp    = re.search(r"EXPERIENCE:\s*([\d.]+)", content)
-        skills = re.search(r"SKILLS:\s*(.+)",        content)
-
+        
+        # ── BULLETPROOF SKILLS PARSING ──
+        # Stops at the next ALL CAPS heading (like FIT_SUMMARY) or end of string
+        skills = re.search(r"SKILLS:\s*(.+?)(?=\n[A-Z_]+:|$)", content, re.DOTALL | re.IGNORECASE)
         skills_list = []
         if skills:
-            skills_list = [s.strip() for s in skills.group(1).split(",") if s.strip()]
+            raw_skills = skills.group(1).strip()
+            # Split by commas OR newlines OR bullet points
+            parts = re.split(r',|\n|•|-', raw_skills)
+            for p in parts:
+                clean_skill = p.strip()
+                # Remove leading bullet characters just in case
+                clean_skill = re.sub(r'^[•\-\*]\s*', '', clean_skill).strip()
+                # Filter out empty strings and common mistakes
+                if clean_skill and len(clean_skill) > 1 and not clean_skill.lower().startswith("see "):
+                    skills_list.append(clean_skill)
+
+        fit_summary = re.search(r"FIT_SUMMARY:\s*(.+?)(?=\n[A-Z_]+:|$)", content, re.DOTALL | re.IGNORECASE)
+        fit_text = ""
+        if fit_summary:
+            fit_text = fit_summary.group(1).strip().split("\n")[0][:600]
+
+        # ── PARSE LLM SCORE ──
+        llm_score_match = re.search(r"LLM_SCORE:\s*(\d{1,3})", content)
+        llm_score = 0
+        if llm_score_match:
+            llm_score = int(llm_score_match.group(1))
+            if llm_score > 100: llm_score = 100
 
         # ✅ FIX: Check if the extracted name is valid (not a section header)
         raw_name = name.group(1).strip() if name else ""
@@ -188,6 +209,8 @@ Resume:
             "phone":      phone.group(1).strip()  if phone  else "",
             "experience": _safe_float(exp.group(1)) if exp else 0.0,
             "skills":     skills_list,
+            "fit_summary": fit_text,
+            "llm_score":  llm_score,
         })
 
     except ollama.ResponseError as e:

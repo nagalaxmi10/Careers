@@ -1,8 +1,9 @@
 import { useEffect, useState, useRef } from "react"
 import { useNavigate } from "react-router-dom"
 import API from "../api/axios"
-import MyProfile from "./MyProfile"
-import { toast } from "../components/Toast"// ✅ Toast import
+import MyProfile from "../components/MyProfile"
+import ChangePassword from "../components/ChangePassword" // ✅ Added ChangePassword
+import { toast } from "../components/Toast"
 
 // ─── Skill library ───────────────────────────────────────────────────────────
 const SKILL_CATEGORIES = {
@@ -99,12 +100,6 @@ const sp = {
   noResults: { color:C.muted, fontSize:"13px", padding:"1rem", margin:0 },
   dropFooter: { display:"flex", justifyContent:"space-between", alignItems:"center", padding:"8px 12px", borderTop:`1px solid ${C.border}`, fontSize:"12px", color:C.muted },
   clearAll: { background:"none", border:"none", color:"#f87171", fontSize:"12px", cursor:"pointer", fontFamily:"inherit" },
-}
-
-const STATUS_STYLE = {
-  PENDING:  { bg:"#1e3a5f", color:"#93c5fd", dot:"#60a5fa" },
-  APPROVED: { bg:"#0f2d1f", color:"#6ee7b7", dot:"#34d399" },
-  REJECTED: { bg:"#2d0f0f", color:"#fca5a5", dot:"#f87171" },
 }
 
 // ✅ Feature 2: Visual Status Stepper Component
@@ -241,7 +236,20 @@ export default function EmployeeDashboard() {
       load()
     } catch (err) { toast.error("Failed to update. Request may already be approved.") }
   }
-
+  const deleteRequest = async (id, status) => {
+  if (status !== "PENDING") {
+    toast.error("Only pending requests can be deleted.")
+    return
+  }
+  if (!window.confirm("Delete this job request? This cannot be undone.")) return
+  try {
+    await API.delete(`jobs/${id}/`)
+    toast.success("Request deleted.")
+    load()
+  } catch (err) {
+    toast.error("Failed to delete request.")
+  }
+}
   const logout = () => { localStorage.removeItem("token"); localStorage.removeItem("refresh"); navigate("/") }
   const pending = requests.filter(r => r?.status === "PENDING").length
   const approved = requests.filter(r => r?.status === "APPROVED").length
@@ -327,8 +335,11 @@ export default function EmployeeDashboard() {
                       <div style={s.cardTop}>
                         <h3 style={s.cardTitle}>{r.title}</h3>
                         <div style={{display:"flex", gap:"8px", alignItems:"center"}}>
-                          <button style={s.editBtn} onClick={e => { e.stopPropagation(); startEdit(r) }}>✏️ Edit</button>
-                        </div>
+  <button style={s.editBtn} onClick={e => { e.stopPropagation(); startEdit(r) }}>✏️ Edit</button>
+  {r.status === "PENDING" && (
+    <button style={s.deleteBtn} onClick={e => { e.stopPropagation(); deleteRequest(r.id, r.status) }}>🗑 Delete</button>
+  )}
+</div>
                       </div>
                       <p style={s.cardDesc}>{r.description}</p>
                       <div style={s.cardMeta}>
@@ -349,7 +360,10 @@ export default function EmployeeDashboard() {
             })}
           </div>
         </>}
-        {(tab === "profile" || tab === "password") && <MyProfile tab={tab} />}
+        
+        {/* ✅ Updated Profile/Password Routing */}
+        {tab === "profile" && <MyProfile />}
+        {tab === "password" && <ChangePassword />}
       </div>
     </div>
   )
@@ -406,4 +420,4 @@ const s = {
   editBtn: { padding:"5px 12px", background:"none", border:`1px solid ${C.border}`, color:C.muted, borderRadius:"8px", fontSize:"12px", cursor:"pointer", fontFamily:"inherit" },
   saveEditBtn: { padding:"6px 14px", background:C.accent, color:"#fff", border:"none", borderRadius:"8px", fontSize:"12px", cursor:"pointer", fontFamily:"inherit", fontWeight:"600" },
   cancelEditBtn: { padding:"6px 14px", background:"none", border:`1px solid ${C.border}`, color:C.muted, borderRadius:"8px", fontSize:"12px", cursor:"pointer", fontFamily:"inherit" },
-}
+deleteBtn: { padding:"5px 12px", background:"#2d0f0f", color:"#fca5a5", border:"1px solid #5c1a1a", borderRadius:"8px", fontSize:"12px", cursor:"pointer", fontFamily:"inherit" },}

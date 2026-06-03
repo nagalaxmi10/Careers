@@ -3,6 +3,7 @@ import MyProfile from "../components/MyProfile"
 import { useNavigate } from "react-router-dom"
 import API from "../api/axios"
 import { toast } from "../components/Toast"
+import ChangePassword from "../components/ChangePassword"
 
 const C = {
   dark:"#0a0f1e", mid:"#162040", card:"#1a2a4a",
@@ -106,6 +107,7 @@ export default function JuniorHRDashboard() {
   const [loading, setLoading] = useState(false)
   const [lastRefresh, setLastRefresh] = useState(null)
   const [selectedDate, setSelectedDate] = useState(new Date())
+  const [sendingEmailId, setSendingEmailId] = useState(null) // Tracks which email is being sent
 
   const loadData = useCallback(async (showLoading = false) => {
     if (showLoading) setLoading(true)
@@ -148,6 +150,33 @@ export default function JuniorHRDashboard() {
     } catch (err) { toast.error("Could not load resume file.") }
   }
 
+  // ─── MANUAL EMAIL RESEND / RETRY ─────────────────────────────────────
+  const handleResendEmail = async (logId) => {
+    setSendingEmailId(logId)
+    try {
+      await API.post(`recruitment/resend-email/${logId}/`)
+      toast.success("Email resent successfully!")
+      loadData()
+    } catch (err) {
+      toast.error("Failed to resend email.")
+    } finally {
+      setSendingEmailId(null)
+    }
+  }
+
+  const handleManualInvite = async (candidateId) => {
+    setSendingEmailId(candidateId)
+    try {
+      await API.post(`recruitment/manual-invite/${candidateId}/`)
+      toast.success("Manual invite sent!")
+      loadData()
+    } catch (err) {
+      toast.error("Failed to send manual invite.")
+    } finally {
+      setSendingEmailId(null)
+    }
+  }
+
   const logout = () => { localStorage.removeItem("token"); localStorage.removeItem("refresh"); navigate("/") }
 
   const STATUS_COLORS = {
@@ -186,7 +215,7 @@ export default function JuniorHRDashboard() {
           <button style={{...s.navBtn, ...(tab==="profile" ? s.navActive : {})}} onClick={() => setTab("profile")}><span>👤</span> My Profile</button>
           <button style={{...s.navBtn, ...(tab==="password" ? s.navActive : {})}} onClick={() => setTab("password")}><span>🔑</span> Change Password</button>
         </nav>
-        <div style={s.viewOnlyBadge}>👁 View only</div>
+        <div style={s.viewOnlyBadge}>👁 View + Manual Email</div>
         <button style={s.logoutBtn} onClick={logout}>Sign out</button>
       </div>
 
@@ -206,10 +235,11 @@ export default function JuniorHRDashboard() {
           </div>
         )}
 
-        {(tab === "profile" || tab === "password") && <MyProfile tab={tab} />}
+        {tab === "profile" && <MyProfile />}
+{tab === "password" && <ChangePassword />}
 
         {tab === "shortlisted" && <>
-          <div style={s.header}><h1 style={s.pageTitle}>Shortlisted Candidates</h1><p style={s.pageSub}>View only — contact HR to make changes</p></div>
+          <div style={s.header}><h1 style={s.pageTitle}>Shortlisted Candidates</h1><p style={s.pageSub}>View candidates or manually send interview invites</p></div>
           <div style={s.list}>
             {shortlisted.length === 0 && <div style={s.empty}>No shortlisted candidates yet.</div>}
             {shortlisted.map(c => {
@@ -231,7 +261,16 @@ export default function JuniorHRDashboard() {
                         {toSkillArray(candidate?.skills).slice(0,5).map((sk,i) => (<span key={i} style={s.skill}>{sk}</span>))}
                         {toSkillArray(candidate?.skills).length === 0 && <span style={{...s.skill, color:"#3d5a8a", fontStyle:"italic"}}>No skills extracted</span>}
                       </div>
-                      <button onClick={() => handleViewResume(candidate?.id)} style={s.viewResumeBtn}>📄 View Original Resume</button>
+                      <div style={{display: "flex", gap: "8px", marginTop: "8px"}}>
+                        <button onClick={() => handleViewResume(candidate?.id)} style={s.viewResumeBtn}>📄 View Resume</button>
+                        <button 
+                          onClick={() => handleManualInvite(candidate?.id)} 
+                          style={s.manualEmailBtn}
+                          disabled={sendingEmailId === candidate?.id}
+                        >
+                          {sendingEmailId === candidate?.id ? "⏳ Sending..." : "📧 Resend Invite"}
+                        </button>
+                      </div>
                     </div>
                   </div>
                   <div style={{...s.score, color: scoreColor, borderColor: scoreColor}}>{(candidate?.match_percentage || 0).toFixed(0)}%</div>
@@ -299,7 +338,20 @@ export default function JuniorHRDashboard() {
                   <div style={s.cardLeft}>
                     <div style={{...s.avatar, background:"#1e3a5f", fontSize:"18px"}}>📧</div>
                     <div style={{flex:1}}>
-                      <div style={s.nameRow}><p style={s.name}>{log.subject}</p><span style={{...s.badge, background: statusColor.bg, color: statusColor.color, border:`1px solid ${statusColor.border}`}}>{log.status}</span></div>
+                      <div style={s.nameRow}>
+                        <p style={s.name}>{log.subject}</p>
+                        <span style={{...s.badge, background: statusColor.bg, color: statusColor.color, border:`1px solid ${statusColor.border}`}}>{log.status}</span>
+                        {/* Manual Retry Button for FAILED emails */}
+                        {log.status === "FAILED" && (
+                          <button 
+                            onClick={() => handleResendEmail(log.id)} 
+                            style={s.retryBtn}
+                            disabled={sendingEmailId === log.id}
+                          >
+                            {sendingEmailId === log.id ? "⏳ Retrying..." : "🔄 Retry Send"}
+                          </button>
+                        )}
+                      </div>
                       <p style={s.email}>✉ To: {log.to}</p>
                       <p style={s.email}>🕐 {new Date(log.sent_at).toLocaleString("en-US", { month:"short", day:"numeric", year:"numeric", hour:"2-digit", minute:"2-digit" })}</p>
                       {log.error && <p style={{...s.email, color:"#fca5a5"}}>⚠ {log.error}</p>}
@@ -341,7 +393,7 @@ const s = {
   card: { background:C.mid, borderRadius:"16px", padding:"1.25rem 1.5rem", display:"flex", justifyContent:"space-between", alignItems:"flex-start", border:`1px solid ${C.border}` },
   cardLeft: { display:"flex", gap:"1rem", flex:1 },
   avatar: { width:"42px", height:"42px", background:C.accent, borderRadius:"10px", display:"flex", alignItems:"center", justifyContent:"center", fontWeight:"700", fontSize:"16px", color:"#fff", flexShrink:0 },
-  nameRow: { display:"flex", alignItems:"center", gap:"10px", marginBottom:"4px" },
+  nameRow: { display:"flex", alignItems:"center", gap:"10px", marginBottom:"4px", flexWrap:"wrap" },
   name: { fontWeight:"600", color:C.text, margin:0, fontSize:"15px" },
   email: { color:C.muted, fontSize:"12px", margin:"0 0 2px" },
   job: { color:C.accent, fontSize:"12px", margin:"0 0 8px" },
@@ -352,5 +404,7 @@ const s = {
   emailBody: { background:C.card, border:`1px solid ${C.border}`, borderRadius:"8px", padding:"12px", fontSize:"12px", color:C.muted, marginTop:"8px", whiteSpace:"pre-wrap", fontFamily:"monospace", lineHeight:1.6 },
   refreshBtn: { background: C.card, border: `1px solid ${C.border}`, color: C.accent, borderRadius: "8px", padding: "8px 16px", fontSize: "13px", cursor: "pointer", fontFamily: "inherit", fontWeight: "600" },
   autoRefreshNote: { fontSize: "12px", color: "#3d5a8a", fontStyle: "italic" },
-  viewResumeBtn: { background:"none", border:`1px solid ${C.border}`, color:C.accent, borderRadius:"6px", padding:"4px 10px", fontSize:"12px", cursor:"pointer", marginTop:"8px", fontFamily:"inherit" },
+  viewResumeBtn: { background:"none", border:`1px solid ${C.border}`, color:C.accent, borderRadius:"6px", padding:"4px 10px", fontSize:"12px", cursor:"pointer", fontFamily:"inherit" },
+  manualEmailBtn: { background:"#1e3a5f", border:`1px solid #1f3460`, color:"#93c5fd", borderRadius:"6px", padding:"4px 10px", fontSize:"12px", cursor:"pointer", fontFamily:"inherit" },
+  retryBtn: { background:"#2d0f0f", border:`1px solid #5c1a1a`, color:"#fca5a5", borderRadius:"20px", padding:"3px 10px", fontSize:"11px", cursor:"pointer", fontFamily:"inherit", fontWeight:"600" },
 }

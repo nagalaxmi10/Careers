@@ -63,8 +63,14 @@ def generate_jd(request):
     if request.user.role != "EMPLOYEE":
         return Response({"error": "Only employees can generate JDs"}, status=403)
 
-    prompt = f"""You are an expert HR professional. Generate a detailed Job Description for the role: '{title}'.
-Return the output STRICTLY in the following JSON format:
+    prompt = f"""
+You are an expert HR assistant. Generate a concise job description for a {title} role.
+
+CRITICAL INSTRUCTIONS:
+1. Keep the total length under 300 words.
+2. Output MUST be in valid JSON format only.
+3. Do not include any conversational text, just the JSON.
+4. Use this exact schema:
 {{
   "description": "A brief 2-3 line summary of the role.",
   "key_responsibilities": "3-5 bullet points separated by newlines.",

@@ -144,10 +144,10 @@ import os
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # ── Email Settings (Mailtrap Live Demo) ──
-EMAIL_BACKEND_LIVE = True  # ✅ MUST BE TRUE
+EMAIL_BACKEND_LIVE = True  
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'sandbox.smtp.mailtrap.io'  # From Mailtrap
-EMAIL_PORT = 2525                        # From Mailtrap
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")  # Paste from Mailtrap
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD") # Paste from Mailtrap
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'  
+EMAIL_PORT = 2525                        
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")  
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD") 
 EMAIL_USE_TLS = True

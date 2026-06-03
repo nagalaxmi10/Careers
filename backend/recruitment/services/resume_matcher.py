@@ -131,6 +131,8 @@ def match_resume(extracted_skills, required_skills):
 
     def normalise(skill):
         s = skill.lower().strip()
+        # ✅ NEW: Strip leading bullet points/dashes that might survive parsing
+        s = re.sub(r'^[•\-\*]\s*', '', s).strip()
         return ALIASES.get(s, s)
 
     def all_forms(skill):

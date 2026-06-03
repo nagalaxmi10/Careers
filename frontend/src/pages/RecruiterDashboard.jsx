@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import MyProfile from "../components/MyProfile"
 import { useNavigate } from "react-router-dom"
 import API from "../api/axios"
+import FitSummary from "../components/FitSummary"
+import { toast } from "../components/Toast" // ✅ Added Toast for delete notifications
 
 const toSkillArray = (skills) => {
   if (!skills) return []
@@ -103,7 +105,11 @@ export default function RecruiterDashboard() {
     }
   }
 
-  const logout = () => { localStorage.removeItem("token"); navigate("/") }
+  const logout = () => {
+  localStorage.removeItem("token")
+  localStorage.removeItem("refresh")
+  navigate("/")
+}
 
   const jobResumes = selectedJob ? (resumes[selectedJob.id] || []) : []
   const shortlisted = jobResumes.filter(r => r.is_shortlisted)
@@ -214,13 +220,15 @@ export default function RecruiterDashboard() {
           <h2 style={s.sectionTitle}>✅ Shortlisted ({shortlisted.length})</h2>
           <div style={s.list}>
             {shortlisted.length === 0 && <div style={s.empty}>No shortlisted candidates yet.</div>}
-            {shortlisted.map(r => <ResumeCard key={r.id} resume={r} />)}
+            {/* ✅ Pass onRefresh prop to reload data after delete */}
+            {shortlisted.map(r => <ResumeCard key={r.id} resume={r} onRefresh={() => { loadResumes(selectedJob.id); loadJobs(); }} />)}
           </div>
 
           <h2 style={{...s.sectionTitle, marginTop:"2rem"}}>❌ Not Shortlisted ({notShortlisted.length})</h2>
           <div style={s.list}>
             {notShortlisted.length === 0 && <div style={s.empty}>None yet.</div>}
-            {notShortlisted.map(r => <ResumeCard key={r.id} resume={r} />)}
+            {/* ✅ Pass onRefresh prop to reload data after delete */}
+            {notShortlisted.map(r => <ResumeCard key={r.id} resume={r} onRefresh={() => { loadResumes(selectedJob.id); loadJobs(); }} />)}
           </div>
         </>}
       </div>
@@ -228,14 +236,14 @@ export default function RecruiterDashboard() {
   )
 }
 
-function ResumeCard({ resume }) {
+// ✅ Added onRefresh prop
+function ResumeCard({ resume, onRefresh }) {
   const score = resume.match_percentage || 0
   const scoreColor = score >= 65 ? "#6ee7b7" : score >= 40 ? "#fbbf24" : "#f87171"
   const displayName = cleanDisplayName(resume.candidate_name, resume.email, resume.id)
   const skills = toSkillArray(resume.skills)
   const experience = resume.experience || 0
 
-  // ✅ View Original Resume - with PDF Blob fix
   const handleViewResume = async (id) => {
     try {
       const response = await API.get(`recruitment/resumes/${id}/download/`, {
@@ -244,7 +252,19 @@ function ResumeCard({ resume }) {
       const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
       window.open(fileURL);
     } catch (err) {
-      alert("Could not load resume file.");
+      toast.error("Could not load resume file.");
+    }
+  }
+
+  // ✅ DELETE FUNCTION
+  const handleDelete = async () => {
+    if (!window.confirm(`Delete resume for ${displayName}? This cannot be undone.`)) return
+    try {
+      await API.delete(`recruitment/resumes/${resume.id}/`)
+      toast.success("Resume deleted successfully")
+      if (onRefresh) onRefresh() // Refresh the list and stats
+    } catch (err) {
+      toast.error("Failed to delete resume.")
     }
   }
 
@@ -270,12 +290,23 @@ function ResumeCard({ resume }) {
               : <span style={rs.missingSkill}>No skills extracted</span>
             }
           </div>
-          <button 
-            onClick={() => handleViewResume(resume.id)} 
-            style={rs.viewResumeBtn}
-          >
-            📄 View Original Resume
-          </button>
+          <div style={{display:"flex", gap:"8px", marginTop:"8px"}}>
+            <button 
+              onClick={() => handleViewResume(resume.id)} 
+              style={rs.viewResumeBtn}
+            >
+              📄 View Original Resume
+            </button>
+            <button 
+              onClick={handleDelete} 
+              style={rs.deleteBtn}
+            >
+              🗑️ Delete
+            </button>
+          </div>
+          
+          {/* 🤖 Add the RAG Fit Summary Here */}
+          <FitSummary summary={resume.fit_summary} />
         </div>
       </div>
       <div style={rs.right}>
@@ -305,7 +336,8 @@ const rs = {
   score: { fontSize:"24px", fontWeight:"700", border:"2px solid", borderRadius:"50%", width:"60px", height:"60px", display:"flex", alignItems:"center", justifyContent:"center" },
   scoreLabel: { color:"#7a94c1", fontSize:"11px", margin:0 },
   exp: { color:"#7a94c1", fontSize:"11px", margin:0 },
-  viewResumeBtn: { background:"none", border:"1px solid #1f3460", color:"#4f8ef7", borderRadius:"6px", padding:"4px 10px", fontSize:"12px", cursor:"pointer", marginTop:"8px", fontFamily:"inherit" },
+  viewResumeBtn: { background:"none", border:"1px solid #1f3460", color:"#4f8ef7", borderRadius:"6px", padding:"4px 10px", fontSize:"12px", cursor:"pointer", fontFamily:"inherit" },
+  deleteBtn: { background:"none", border:"1px solid #5c1a1a", color:"#fca5a5", borderRadius:"6px", padding:"4px 10px", fontSize:"12px", cursor:"pointer", fontFamily:"inherit" }, // ✅ DELETE BUTTON STYLE
 }
 
 const s = {
