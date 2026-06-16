@@ -4,31 +4,21 @@ import os
 import tempfile
 
 # ── GET endpoint (fetch/download files from SharePoint) ───────────────────────
-POWER_PLATFORM_GET_URL = (
-    "https://default68eb45d8bd6c4853b16dc49ccc82bf.59.environment.api.powerplatform.com:443"
-    "/powerautomate/automations/direct/workflows/c5f0215ef68e40c3affc90dbf04ea86c"
-    "/triggers/manual/paths/invoke"
-)
-
-# ── POST endpoint (upload file + skillset back to SharePoint) ─────────────────
-POWER_PLATFORM_POST_URL = (
-    "https://default68eb45d8bd6c4853b16dc49ccc82bf.59.environment.api.powerplatform.com:443"
-    "/powerautomate/automations/direct/workflows/ae7c385a5b8044dca0afd4a85870b395"
-    "/triggers/manual/paths/invoke"
-)
+POWER_PLATFORM_GET_URL  = os.environ.get("SHAREPOINT_GET_URL")
+POWER_PLATFORM_POST_URL = os.environ.get("SHAREPOINT_POST_URL")
 
 POWER_PLATFORM_GET_PARAMS = {
     "api-version": "1",
     "sp": "/triggers/manual/run",
     "sv": "1.0",
-    "sig": "_SKgs3CHgs5y1aS1wRX29FATgOO0KgjY4DEPqPHLBBA",
+    "sig": os.environ.get("SHAREPOINT_GET_SIG"),
 }
 
 POWER_PLATFORM_POST_PARAMS = {
     "api-version": "1",
     "sp": "/triggers/manual/run",
     "sv": "1.0",
-    "sig": "zMCqyUQPvwaqFva-qTuh1uN-N1khRXo8aOFv-BP6isM",
+    "sig": os.environ.get("SHAREPOINT_POST_SIG"),
 }
 
 
