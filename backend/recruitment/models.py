@@ -2,17 +2,14 @@ from django.db import models
 from django.conf import settings
 from jobs.models import JobRequest
 
+# In recruitment/models.py
 class CandidateResume(models.Model):
-    job_request = models.ForeignKey(
-        JobRequest, on_delete=models.CASCADE, related_name="resumes"
-    )
-    uploaded_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name="uploaded_resumes"
-    )
-    resume = models.FileField(upload_to="resumes/")
+    job_request = models.ForeignKey(JobRequest, on_delete=models.CASCADE, related_name="resumes")
+    uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="uploaded_resumes")
+    resume_file = models.FileField(upload_to="resumes/", blank=True, null=True)
+    # ✅ CHANGED: From FileField to URLField
+    resume_url = models.URLField(max_length=500, blank=True, help_text="Direct link to the candidate's resume")
+    
     candidate_name = models.CharField(max_length=255, blank=True)
     email = models.EmailField(blank=True)
     phone = models.CharField(max_length=20, blank=True)
@@ -22,7 +19,9 @@ class CandidateResume(models.Model):
     match_percentage = models.FloatField(default=0)
     is_shortlisted = models.BooleanField(default=False)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    original_filename = models.CharField(max_length=255, blank=True, null=True)  # ← ADD THIS
     fit_summary = models.TextField(blank=True)
+
     def __str__(self):
         return self.candidate_name or "Unknown Candidate"
 
@@ -99,3 +98,42 @@ class EmailLog(models.Model):
 
     def __str__(self):
         return f"{self.to} — {self.subject}"
+# ── ADD THIS TO recruitment/models.py ────────────────────────────────────────
+
+class ResumeProcessingLog(models.Model):
+    STATUS_CHOICES = [
+        ("SUCCESS",      "Success"),
+        ("OLLAMA_ERROR", "Ollama Error"),
+        ("ERROR",        "Error"),
+        ("SKIPPED",      "Skipped"),
+    ]
+
+    # Upload info
+    filename        = models.CharField(max_length=255, blank=True)
+    uploaded_by     = models.CharField(max_length=100, blank=True)
+    processed_at    = models.DateTimeField(auto_now_add=True)
+
+    # OCR / Extraction info
+    ocr_method      = models.CharField(max_length=50, blank=True)   # pypdf2, llava_image, etc.
+    ollama_model    = models.CharField(max_length=50, blank=True)
+    ollama_raw_output = models.TextField(blank=True)                 # full raw Ollama response
+
+    # Extracted fields
+    extracted_name      = models.CharField(max_length=255, blank=True)
+    extracted_email     = models.CharField(max_length=255, blank=True)
+    extracted_phone     = models.CharField(max_length=50,  blank=True)
+    extracted_experience = models.FloatField(default=0.0)
+    extracted_skills    = models.JSONField(default=list)
+    llm_score           = models.IntegerField(default=0)
+
+    # Status
+    status          = models.CharField(max_length=20, choices=STATUS_CHOICES, default="SUCCESS")
+    error_message   = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ["-processed_at"]
+        verbose_name = "Resume Processing Log"
+        verbose_name_plural = "Resume Processing Logs"
+
+    def __str__(self):
+        return f"{self.filename} — {self.status} @ {self.processed_at:%Y-%m-%d %H:%M}"

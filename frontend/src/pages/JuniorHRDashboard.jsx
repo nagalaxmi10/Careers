@@ -142,12 +142,13 @@ export default function JuniorHRDashboard() {
     return () => clearInterval(interval)
   }, [tab, loadData])
 
-  const handleViewResume = async (id) => {
-    try {
-      const response = await API.get(`recruitment/resumes/${id}/download/`, { responseType: 'blob' });
-      const fileURL = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-      window.open(fileURL);
-    } catch (err) { toast.error("Could not load resume file.") }
+    // Replace the old handleViewResume with this:
+  const handleViewResume = (url) => {
+    if (url) {
+      window.open(url, '_blank'); // Opens the original link in a new tab
+    } else {
+      toast.error("No resume link available.");
+    }
   }
 
   // ─── MANUAL EMAIL RESEND / RETRY ─────────────────────────────────────
@@ -262,7 +263,7 @@ export default function JuniorHRDashboard() {
                         {toSkillArray(candidate?.skills).length === 0 && <span style={{...s.skill, color:"#3d5a8a", fontStyle:"italic"}}>No skills extracted</span>}
                       </div>
                       <div style={{display: "flex", gap: "8px", marginTop: "8px"}}>
-                        <button onClick={() => handleViewResume(candidate?.id)} style={s.viewResumeBtn}>📄 View Resume</button>
+                        <button onClick={() => handleViewResume(candidate?.resume_url)} style={s.viewResumeBtn}>📄 View Resume</button>
                         <button 
                           onClick={() => handleManualInvite(candidate?.id)} 
                           style={s.manualEmailBtn}

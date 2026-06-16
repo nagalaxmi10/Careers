@@ -22,8 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
-
+SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -46,7 +45,7 @@ INSTALLED_APPS = [
     "recruitment",
     "drf_spectacular",
 ]
-
+TESSERACT_CMD = r"C:\Users\NagalaxmiGummadavell\AppData\Local\Programs\Tesseract-OCR\tesseract.exe"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -148,6 +147,44 @@ EMAIL_BACKEND_LIVE = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'sandbox.smtp.mailtrap.io'  
 EMAIL_PORT = 2525                        
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")  
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD") 
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')  
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') 
 EMAIL_USE_TLS = True
+# ── ADD THIS TO backend/settings.py ──────────────────────────────────────────
+
+import os
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "formatters": {
+        "verbose": {
+            "format": "[{asctime}] [{levelname}] {name}: {message}",
+            "style": "{",
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+        "resume_file": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": os.path.join(BASE_DIR, "logs", "resume_processing.log"),
+            "maxBytes": 5 * 1024 * 1024,  # 5 MB per file
+            "backupCount": 5,              # keep last 5 rotated files
+            "formatter": "verbose",
+        },
+    },
+
+    "loggers": {
+        "resume_processing": {
+            "handlers": ["console", "resume_file"],
+            "level": "DEBUG",          # change to INFO in production
+            "propagate": False,
+        },
+    },
+}

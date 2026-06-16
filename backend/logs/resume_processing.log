@@ -1,0 +1,706 @@
+[2026-06-04 11:19:17] [WARNING] resume_processing: [EXTRACTOR] PyPDF2 failed: EOF marker not found
+[2026-06-04 11:19:17] [WARNING] resume_processing: [EXTRACTOR] PDF text too short, falling back to Ollama Vision OCR
+[2026-06-04 11:19:17] [INFO] resume_processing: [OCR] Sending image to LLaVA for OCR...
+[2026-06-04 11:21:06] [INFO] resume_processing: [OCR] LLaVA extracted 1234 characters
+[2026-06-04 11:21:06] [DEBUG] resume_processing: [OCR] RAW OUTPUT:
+ AJAY MEHNDA
+PROFESSIONAL SUMMARY
+
+TECHNICAL SKILLS
+- C++ Programming Language
+- Data Structure & Algorithms
+- Embedded Systems
+- Networking
+- Operating Systems
+- Debugging and Troubleshooting
+
+EXPERIENCE
+
+Software Development Intern, XYZ COMPANY, 2018-2019
+- Developed applications using C++ and Qt framework.
+- Worked on a project that involved designing an embedded system for automating tasks in warehouses.
+- Collaborated with team members to develop efficient solutions.
+
+Education
+Bachelor of Technology, ABC University, 2016-2020
+
+Certifications
+- Certified Embedded Systems Designer (CESD) by IEEE
+- Data Structures and Algorithms (Coursera) by Princeton University
+
+Personal Projects
+- Developed a mobile application using Android Studio to help people in tracking their daily activities and goals.
+- Built an IoT project using NodeMCU and MQTT protocols to control home appliances remotely.
+
+Languages: English, Hindi
+
+Contact Information
+Email: ajaymehn@gmail.com
+Phone: +91 9876543210
+LinkedIn: linkedin.com/in/ajaymehnada
+
+Skills
+- Strong problem-solving abilities
+- Teamwork and communication skills
+- Ability to learn new technologies quickly
+- Experience with various operating systems like Windows, Linux, and macOS 
+[2026-06-04 11:21:07] [INFO] resume_processing: [REGEX] Extracted — Name: Personal Projects | Email: ajaymehn@gmail.com | Skills: []
+[2026-06-04 11:21:07] [INFO] resume_processing: [OLLAMA] Starting extraction for: unknown | Uploaded by: unknown
+[2026-06-04 11:21:07] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Personal Projects | Email: ajaymehn@gmail.com
+[2026-06-04 11:21:40] [INFO] resume_processing: [OLLAMA] Raw response received (215 chars)
+[2026-06-04 11:21:40] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information:
+
+NAME: AJAY MEHNDA
+EMAIL: ajaymehn@gmail.com
+PHONE: +91 9876543210
+EXPERIENCE: 1
+SKILLS: C++, Qt framework, Embedded Systems, Networking, Operating Systems
+FIT_SUMMARY: 
+LLM_SCORE:
+[2026-06-04 11:21:40] [INFO] resume_processing: [OLLAMA] Extracted — Name: AJAY MEHNDA | Email: ajaymehn@gmail.com | Score: 0 | Skills: ['C++', 'Qt framework', 'Embedded Systems', 'Networking', 'Operating Systems']
+[2026-06-04 11:21:40] [INFO] resume_processing: [LOG] DB log saved for: unknown
+[2026-06-04 11:40:47] [WARNING] resume_processing: [EXTRACTOR] PyPDF2 failed: EOF marker not found
+[2026-06-04 11:40:47] [WARNING] resume_processing: [EXTRACTOR] PDF text too short, falling back to Ollama Vision OCR
+[2026-06-04 11:40:47] [INFO] resume_processing: [OCR] Sending image to LLaVA for OCR...
+[2026-06-04 11:41:30] [INFO] resume_processing: [OCR] LLaVA extracted 15 characters
+[2026-06-04 11:41:30] [DEBUG] resume_processing: [OCR] RAW OUTPUT:
+ Avinash Mhetra
+[2026-06-04 11:52:43] [WARNING] resume_processing: [EXTRACTOR] PyPDF2 failed: EOF marker not found
+[2026-06-04 11:52:43] [WARNING] resume_processing: [EXTRACTOR] PDF text too short, falling back to Tesseract via PyMuPDF render
+[2026-06-04 11:52:44] [ERROR] resume_processing: [OCR] Tesseract failed: C:\Program Files\Tesseract-OCR\tesseract.exe is not installed or it's not in your PATH. See README file for more information. — falling back to LLaVA
+[2026-06-04 11:52:44] [INFO] resume_processing: [OCR] Sending image to LLaVA as fallback...
+[2026-06-04 11:56:05] [INFO] resume_processing: [OCR] LLaVA fallback extracted 2564 characters
+[2026-06-04 11:56:05] [DEBUG] resume_processing: [OCR] LLAVA RAW OUTPUT:
+ Aarushi Mishra
+
+Summary:
+A dedicated professional with a strong academic background in Electronics and Communication Engineering. Proven experience of working as a Technical Support Engineer at XYZ Technologies, handling both hardware and software issues related to Telecommunications Networks. Strong interpersonal skills with the ability to work effectively in a team environment. Proficient in problem-solving, troubleshooting, and communication skills.
+
+Technical Skills:
+
+* Hardware & Software Troubleshooting & Maintenance
+* Installation, Configuration, and Upgradation of Telecommunication Networks
+* Experience with Customer Service and Technical Support
+* Proficiency in Microsoft Office Suite (Word, Excel, PowerPoint)
+* Strong Analytical and Decision-Making Skills
+* Teamwork and Collaboration
+* Good Time Management Skills
+
+Educational Qualifications:
+
+* B.Tech in Electronics & Communication Engineering, ABC University, India (Expected Graduation Date: May 20XX)
+
+Certifications:
+
+* Certified Telecommunications Engineer (CTE), Institute of Electrical and Telecommunication Engineers of India (IETE) (2019)
+
+Professional Experience:
+
+XYZ Technologies, Technical Support Engineer
+June 2018 - Present
+Responsibilities:
+
+* Assisting customers in resolving technical issues related to Telecommunication Networks (hardware & software).
+* Handling customer queries and providing solutions for various technical problems.
+* Troubleshooting hardware and software issues and resolving them promptly.
+* Maintaining a database of frequently asked questions and troubleshooting procedures.
+* Participating in team meetings to discuss ongoing projects, challenges faced, and ways to overcome them.
+
+Internship Experience:
+ABC Company, Technical Support Intern
+June 2017 - August 2017
+Responsibilities:
+
+* Assisted customers in resolving technical issues related to Telecommunication Networks (hardware & software).
+* Worked on customer service and technical support.
+* Developed troubleshooting procedures for various technical problems.
+* Assisted in the maintenance of hardware and software components of the network.
+
+Software Proficiency:
+
+* Windows Operating System
+* MS Office Suite (Word, Excel, PowerPoint)
+* Networking Tools (PuTTY, Wireshark, Netstat, etc.)
+* Antivirus Software (AVG, Norton, etc.)
+
+Languages Known:
+
+* English
+
+Software Proficiency:
+
+* Windows Operating System
+* MS Office Suite (Word, Excel, PowerPoint)
+* Networking Tools (PuTTY, Wireshark, Netstat, etc.)
+* Antivirus Software (AVG, Norton, etc.)
+
+References:
+Available on request. 
+[2026-06-04 11:56:05] [INFO] resume_processing: [REGEX] Extracted — Name: Aarushi Mishra | Email:  | Skills: []
+[2026-06-04 11:56:05] [INFO] resume_processing: [OLLAMA] Starting extraction for: unknown | Uploaded by: unknown
+[2026-06-04 11:56:05] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Aarushi Mishra | Email: 
+[2026-06-04 11:56:42] [WARNING] resume_processing: [EXTRACTOR] PyPDF2 failed: EOF marker not found
+[2026-06-04 11:56:42] [WARNING] resume_processing: [EXTRACTOR] PDF text too short, falling back to Tesseract via PyMuPDF render
+[2026-06-04 11:56:44] [INFO] resume_processing: [OCR] Tesseract extracted 1870 characters
+[2026-06-04 11:56:44] [DEBUG] resume_processing: [OCR] TESSERACT RAW OUTPUT:
+Arjun, Mehta 276543210 | linkedin.com/in/arjunmehta | github.com/arjunmehta | Hyderabad, India
+PROFESSIONAL SUMMARY
+Senior Frontend Developer with 7+ years of experience building scalable, responsive, and accessible web applications.
+Expert in the React ecosystem with deep knowledge of Redux state management, component architecture, and
+performance optimization. Proven track record of leading cross-functional teams and delivering enterprise-grade solutions.
+TECHNICAL SKILLS
+Frameworks & Libraries: React.js, Redux, TypeScript, Angular, Next.js
+Core Technologies: HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL
+Tools & DevOps: Docker, Webpack, Git, Cl/CD Pipelines, Jest, Cypress
+Other: Accessibility (WCAG), Agile/Scrum, Code Review, Mentoring
+PROFESSIONAL EXPERIENCE
+Senior Frontend Developer — TechCorp Solutions
+Jan 2020 — Present | Hyderabad, India
+* Led UI development for a SaaS platform serving 500K+ users, improving load time by 35% through code splitting and
+lazy loading.
+* Built a reusable React component library used across 5 product teams, reducing development time by 40%.
+* Implemented Redux Toolkit for state management across 10+ modules, reducing bug reports by 25%.
+* Containerized the frontend application using Docker and integrated into Cl/CD pipelines for seamless deployments.
+* Mentored a team of 4 junior developers through code reviews and pair programming sessions.
+Frontend Developer — Infosys Limited
+Jun 2017 —Dec 2019 | Pune, India
+* Developed Angular-based enterprise dashboards for banking clients, handling real-time data visualization.
+* Collaborated with UX designers and backend engineers in Agile sprints to deliver features on schedule.
+* Optimized CSS and JavaScript bundles, reducing page load time by 20% across client applications.
+EDUCATION
+B.Tech in Computer Science — IIT Hyderabad
+Graduated: 2017 | GPA: 8.7/10
+
+[2026-06-04 11:56:44] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['html5', 'css3', 'javascript', 'es6+', 'react', 'angular']
+[2026-06-04 11:56:44] [INFO] resume_processing: [OLLAMA] Starting extraction for: unknown | Uploaded by: unknown
+[2026-06-04 11:56:44] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-04 11:57:30] [INFO] resume_processing: [OLLAMA] Raw response received (298 chars)
+[2026-06-04 11:57:30] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Arjun Mehta
+EMAIL: linkedin.com/in/arjunmehta
+PHONE: 276543210
+EXPERIENCE: 7+
+SKILLS: React.js, Redux, TypeScript, Angular, Next.js, HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL, Docker, Webpack, Git, Cl/CD Pipelines, Jest, Cypress
+FIT_SUMMARY:
+LLM_SCORE: 0
+[2026-06-04 11:57:30] [INFO] resume_processing: [OLLAMA] Extracted — Name: Arjun Mehta | Email: linkedin.com/in/arjunmehta | Score: 0 | Skills: ['React.js', 'Redux', 'TypeScript', 'Angular', 'Next.js', 'HTML5', 'CSS3', 'JavaScript (ES6+)', 'REST APIs', 'GraphQL', 'Docker', 'Webpack', 'Git', 'Cl/CD Pipelines', 'Jest', 'Cypress']
+[2026-06-04 11:57:30] [INFO] resume_processing: [LOG] DB log saved for: unknown
+[2026-06-04 12:48:16] [INFO] resume_processing: [EXTRACTOR] Django UploadedFile: resume_arjun_mehta_strong_match_page-0001.jpg (ext=.jpg)
+[2026-06-04 12:48:16] [INFO] resume_processing: [EXTRACTOR] Routing to Tesseract OCR pipeline
+[2026-06-04 12:48:17] [INFO] resume_processing: [OCR] Tesseract extracted 1873 characters
+[2026-06-04 12:48:17] [DEBUG] resume_processing: [OCR] TESSERACT RAW OUTPUT:
+Arjun. Mehta :.cszes3210 | linkedin.com/in/arjunmehta | github.com/arjunmehta | Hyderabad, India
+PROFESSIONAL SUMMARY
+Senior Frontend Developer with 7+ years of experience building scalable, responsive, and accessible web applications.
+Expert in the React ecosystem with deep knowledge of Redux state management, component architecture, and
+performance optimization. Proven track record of leading cross-functional teams and delivering enterprise-grade solutions.
+TECHNICAL SKILLS
+Frameworks & Libraries: React.js, Redux, TypeScript, Angular, Next.js
+Core Technologies: HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL
+Tools & DevOps: Docker, Webpack, Git, CI/CD Pipelines, Jest, Cypress
+Other: Accessibility (WCAG), Agile/Scrum, Code Review, Mentoring
+PROFESSIONAL EXPERIENCE
+Senior Frontend Developer — TechCorp Solutions
+Jan 2020 — Present | Hyderabad, India
++ Led Ul development for a SaaS platform serving 500K+ users, improving load time by 35% through code splitting and
+lazy loading.
++ Built a reusable React component library used across 5 product teams, reducing development time by 40%.
++ Implemented Redux Toolkit for state management across 10+ modules, reducing bug reports by 25%.
+* Containerized the frontend application using Docker and integrated into CI/CD pipelines for seamless deployments.
++ Mentored a team of 4 junior developers through code reviews and pair programming sessions.
+Frontend Developer — Infosys Limited
+Jun 2017 — Dec 2019 | Pune, India
++ Developed Angular-based enterprise dashboards for banking clients, handling real-time data visualization.
+* Collaborated with UX designers and backend engineers in Agile sprints to deliver features on schedule.
+* Optimized CSS and JavaScript bundles, reducing page load time by 20% across client applications.
+EDUCATION
+B.Tech in Computer Science — IIT Hyderabad
+Graduated: 2017 | GPA: 8.7/10
+
+[2026-06-04 12:48:17] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['html5', 'css3', 'javascript', 'es6+', 'react', 'angular']
+[2026-06-04 12:48:17] [INFO] resume_processing: [OLLAMA] Starting extraction for: resume_arjun_mehta_strong_match_page-0001.jpg | Uploaded by: mohan@synergy.com
+[2026-06-04 12:48:17] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-04 12:49:22] [INFO] resume_processing: [OLLAMA] Raw response received (690 chars)
+[2026-06-04 12:49:22] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Arjun Mehta
+EMAIL: cszes3210@ (assuming this is a valid email, as per rule 4)
+PHONE: 
+EXPERIENCE: 7
+SKILLS: React.js, Redux, TypeScript, Angular, Next.js, HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL, Docker, Webpack, Git, CI/CD Pipelines, Jest, Cypress
+FIT_SUMMARY: As a senior frontend developer with extensive experience in React ecosystem, Arjun has expertise in leading cross-functional teams and delivering enterprise-grade solutions. He is well-versed in Redux state management, component architecture, and performance optimization. His technical skills are versatile, with knowledge of various frameworks, libraries, and tools.
+LLM_SCORE: 95
+[2026-06-04 12:49:22] [INFO] resume_processing: [OLLAMA] Extracted — Name: Arjun Mehta | Email:  | Score: 95 | Skills: ['React.js', 'Redux', 'TypeScript', 'Angular', 'Next.js', 'HTML5', 'CSS3', 'JavaScript (ES6+)', 'REST APIs', 'GraphQL', 'Docker', 'Webpack', 'Git', 'CI/CD Pipelines', 'Jest', 'Cypress']
+[2026-06-04 12:49:22] [INFO] resume_processing: [LOG] DB log saved for: resume_arjun_mehta_strong_match_page-0001.jpg
+[2026-06-04 12:52:22] [INFO] resume_processing: [EXTRACTOR] Django UploadedFile: resume_arjun_mehta_strong_match_page-0001.jpg (ext=.jpg)
+[2026-06-04 12:52:22] [INFO] resume_processing: [EXTRACTOR] Routing to Tesseract OCR pipeline
+[2026-06-04 12:52:24] [INFO] resume_processing: [OCR] Tesseract extracted 1873 characters
+[2026-06-04 12:52:24] [DEBUG] resume_processing: [OCR] TESSERACT RAW OUTPUT:
+Arjun. Mehta :.cszes3210 | linkedin.com/in/arjunmehta | github.com/arjunmehta | Hyderabad, India
+PROFESSIONAL SUMMARY
+Senior Frontend Developer with 7+ years of experience building scalable, responsive, and accessible web applications.
+Expert in the React ecosystem with deep knowledge of Redux state management, component architecture, and
+performance optimization. Proven track record of leading cross-functional teams and delivering enterprise-grade solutions.
+TECHNICAL SKILLS
+Frameworks & Libraries: React.js, Redux, TypeScript, Angular, Next.js
+Core Technologies: HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL
+Tools & DevOps: Docker, Webpack, Git, CI/CD Pipelines, Jest, Cypress
+Other: Accessibility (WCAG), Agile/Scrum, Code Review, Mentoring
+PROFESSIONAL EXPERIENCE
+Senior Frontend Developer — TechCorp Solutions
+Jan 2020 — Present | Hyderabad, India
++ Led Ul development for a SaaS platform serving 500K+ users, improving load time by 35% through code splitting and
+lazy loading.
++ Built a reusable React component library used across 5 product teams, reducing development time by 40%.
++ Implemented Redux Toolkit for state management across 10+ modules, reducing bug reports by 25%.
+* Containerized the frontend application using Docker and integrated into CI/CD pipelines for seamless deployments.
++ Mentored a team of 4 junior developers through code reviews and pair programming sessions.
+Frontend Developer — Infosys Limited
+Jun 2017 — Dec 2019 | Pune, India
++ Developed Angular-based enterprise dashboards for banking clients, handling real-time data visualization.
+* Collaborated with UX designers and backend engineers in Agile sprints to deliver features on schedule.
+* Optimized CSS and JavaScript bundles, reducing page load time by 20% across client applications.
+EDUCATION
+B.Tech in Computer Science — IIT Hyderabad
+Graduated: 2017 | GPA: 8.7/10
+
+[2026-06-04 12:52:24] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['html5', 'css3', 'javascript', 'es6+', 'react', 'angular']
+[2026-06-04 12:52:24] [INFO] resume_processing: [OLLAMA] Starting extraction for: resume_arjun_mehta_strong_match_page-0001.jpg | Uploaded by: mohan@synergy.com
+[2026-06-04 12:52:24] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-04 12:52:56] [INFO] resume_processing: [OLLAMA] Raw response received (489 chars)
+[2026-06-04 12:52:56] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Arjun Mehta
+EMAIL:
+PHONE:
+EXPERIENCE: 7
+SKILLS: React.js, Redux, TypeScript, Angular, Next.js, HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL, Docker, Webpack, Git, CI/CD Pipelines, Jest, Cypress
+FIT_SUMMARY: Proven track record of leading cross-functional teams and delivering enterprise-grade solutions. Expert in the React ecosystem with deep knowledge of Redux state management, component architecture, and performance optimization.
+LLM_SCORE: 95
+[2026-06-04 12:52:56] [INFO] resume_processing: [OLLAMA] Extracted — Name: Arjun Mehta | Email:  | Score: 95 | Skills: ['React.js', 'Redux', 'TypeScript', 'Angular', 'Next.js', 'HTML5', 'CSS3', 'JavaScript (ES6+)', 'REST APIs', 'GraphQL', 'Docker', 'Webpack', 'Git', 'CI/CD Pipelines', 'Jest', 'Cypress']
+[2026-06-04 12:52:56] [INFO] resume_processing: [LOG] DB log saved for: resume_arjun_mehta_strong_match_page-0001.jpg
+[2026-06-04 12:55:14] [INFO] resume_processing: [EXTRACTOR] Django UploadedFile: resume_arjun_mehta_strong_match_page-0001.jpg (ext=.jpg)
+[2026-06-04 12:55:14] [INFO] resume_processing: [EXTRACTOR] Routing to Tesseract OCR pipeline
+[2026-06-04 12:55:14] [INFO] resume_processing: [OCR] Tesseract extracted 1873 characters
+[2026-06-04 12:55:14] [DEBUG] resume_processing: [OCR] TESSERACT RAW OUTPUT:
+Arjun. Mehta :.cszes3210 | linkedin.com/in/arjunmehta | github.com/arjunmehta | Hyderabad, India
+PROFESSIONAL SUMMARY
+Senior Frontend Developer with 7+ years of experience building scalable, responsive, and accessible web applications.
+Expert in the React ecosystem with deep knowledge of Redux state management, component architecture, and
+performance optimization. Proven track record of leading cross-functional teams and delivering enterprise-grade solutions.
+TECHNICAL SKILLS
+Frameworks & Libraries: React.js, Redux, TypeScript, Angular, Next.js
+Core Technologies: HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL
+Tools & DevOps: Docker, Webpack, Git, CI/CD Pipelines, Jest, Cypress
+Other: Accessibility (WCAG), Agile/Scrum, Code Review, Mentoring
+PROFESSIONAL EXPERIENCE
+Senior Frontend Developer — TechCorp Solutions
+Jan 2020 — Present | Hyderabad, India
++ Led Ul development for a SaaS platform serving 500K+ users, improving load time by 35% through code splitting and
+lazy loading.
++ Built a reusable React component library used across 5 product teams, reducing development time by 40%.
++ Implemented Redux Toolkit for state management across 10+ modules, reducing bug reports by 25%.
+* Containerized the frontend application using Docker and integrated into CI/CD pipelines for seamless deployments.
++ Mentored a team of 4 junior developers through code reviews and pair programming sessions.
+Frontend Developer — Infosys Limited
+Jun 2017 — Dec 2019 | Pune, India
++ Developed Angular-based enterprise dashboards for banking clients, handling real-time data visualization.
+* Collaborated with UX designers and backend engineers in Agile sprints to deliver features on schedule.
+* Optimized CSS and JavaScript bundles, reducing page load time by 20% across client applications.
+EDUCATION
+B.Tech in Computer Science — IIT Hyderabad
+Graduated: 2017 | GPA: 8.7/10
+
+[2026-06-04 12:55:15] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['html5', 'css3', 'javascript', 'es6+', 'react', 'angular']
+[2026-06-04 12:55:15] [INFO] resume_processing: [OLLAMA] Starting extraction for: resume_arjun_mehta_strong_match_page-0001.jpg | Uploaded by: mohan@synergy.com
+[2026-06-04 12:55:15] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-04 12:55:49] [INFO] resume_processing: [OLLAMA] Raw response received (616 chars)
+[2026-06-04 12:55:49] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information:
+
+NAME: Arjun Mehta
+EMAIL:
+PHONE:
+EXPERIENCE: 7
+SKILLS: React.js, Redux, TypeScript, Angular, Next.js, HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL, Docker, Webpack, Git, CI/CD Pipelines, Jest, Cypress
+FIT_SUMMARY: Senior frontend developer with expertise in the React ecosystem and strong background in building scalable, responsive, and accessible web applications. Proven track record of leading cross-functional teams and delivering enterprise-grade solutions. Strong knowledge of Redux state management, component architecture, and performance optimization.
+LLM_SCORE: 85
+[2026-06-04 12:55:49] [INFO] resume_processing: [OLLAMA] Extracted — Name: Arjun Mehta | Email:  | Score: 85 | Skills: ['React.js', 'Redux', 'TypeScript', 'Angular', 'Next.js', 'HTML5', 'CSS3', 'JavaScript (ES6+)', 'REST APIs', 'GraphQL', 'Docker', 'Webpack', 'Git', 'CI/CD Pipelines', 'Jest', 'Cypress']
+[2026-06-04 12:55:49] [INFO] resume_processing: [LOG] DB log saved for: resume_arjun_mehta_strong_match_page-0001.jpg
+[2026-06-04 12:59:47] [INFO] resume_processing: [EXTRACTOR] Django UploadedFile: resume_arjun_mehta_strong_match_page-0001.jpg (ext=.jpg)
+[2026-06-04 12:59:47] [INFO] resume_processing: [EXTRACTOR] Routing to Tesseract OCR pipeline
+[2026-06-04 12:59:48] [INFO] resume_processing: [OCR] Tesseract extracted 1873 characters
+[2026-06-04 12:59:48] [DEBUG] resume_processing: [OCR] TESSERACT RAW OUTPUT:
+Arjun. Mehta :.cszes3210 | linkedin.com/in/arjunmehta | github.com/arjunmehta | Hyderabad, India
+PROFESSIONAL SUMMARY
+Senior Frontend Developer with 7+ years of experience building scalable, responsive, and accessible web applications.
+Expert in the React ecosystem with deep knowledge of Redux state management, component architecture, and
+performance optimization. Proven track record of leading cross-functional teams and delivering enterprise-grade solutions.
+TECHNICAL SKILLS
+Frameworks & Libraries: React.js, Redux, TypeScript, Angular, Next.js
+Core Technologies: HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL
+Tools & DevOps: Docker, Webpack, Git, CI/CD Pipelines, Jest, Cypress
+Other: Accessibility (WCAG), Agile/Scrum, Code Review, Mentoring
+PROFESSIONAL EXPERIENCE
+Senior Frontend Developer — TechCorp Solutions
+Jan 2020 — Present | Hyderabad, India
++ Led Ul development for a SaaS platform serving 500K+ users, improving load time by 35% through code splitting and
+lazy loading.
++ Built a reusable React component library used across 5 product teams, reducing development time by 40%.
++ Implemented Redux Toolkit for state management across 10+ modules, reducing bug reports by 25%.
+* Containerized the frontend application using Docker and integrated into CI/CD pipelines for seamless deployments.
++ Mentored a team of 4 junior developers through code reviews and pair programming sessions.
+Frontend Developer — Infosys Limited
+Jun 2017 — Dec 2019 | Pune, India
++ Developed Angular-based enterprise dashboards for banking clients, handling real-time data visualization.
+* Collaborated with UX designers and backend engineers in Agile sprints to deliver features on schedule.
+* Optimized CSS and JavaScript bundles, reducing page load time by 20% across client applications.
+EDUCATION
+B.Tech in Computer Science — IIT Hyderabad
+Graduated: 2017 | GPA: 8.7/10
+
+[2026-06-04 12:59:48] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['html5', 'css3', 'javascript', 'es6+', 'react', 'angular']
+[2026-06-04 12:59:48] [INFO] resume_processing: [OLLAMA] Starting extraction for: resume_arjun_mehta_strong_match_page-0001.jpg | Uploaded by: mohan@synergy.com
+[2026-06-04 12:59:48] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-04 13:00:21] [INFO] resume_processing: [OLLAMA] Raw response received (540 chars)
+[2026-06-04 13:00:21] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information:
+
+NAME: Arjun Mehta
+EMAIL:
+PHONE:
+EXPERIENCE: 7
+SKILLS: React.js, Redux, TypeScript, Angular, Next.js, HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL, Docker, Webpack, Git, CI/CD Pipelines, Jest, Cypress
+FIT_SUMMARY: With over 7 years of experience in building scalable and responsive web applications, I possess deep knowledge of the React ecosystem and expertise in Redux state management. Proven track record of leading cross-functional teams and delivering enterprise-grade solutions.
+LLM_SCORE: 85
+[2026-06-04 13:00:21] [INFO] resume_processing: [OLLAMA] Extracted — Name: Arjun Mehta | Email:  | Score: 85 | Skills: ['React.js', 'Redux', 'TypeScript', 'Angular', 'Next.js', 'HTML5', 'CSS3', 'JavaScript (ES6+)', 'REST APIs', 'GraphQL', 'Docker', 'Webpack', 'Git', 'CI/CD Pipelines', 'Jest', 'Cypress']
+[2026-06-04 13:00:21] [INFO] resume_processing: [LOG] DB log saved for: resume_arjun_mehta_strong_match_page-0001.jpg
+[2026-06-04 13:14:17] [INFO] resume_processing: [EXTRACTOR] Django UploadedFile: resume_arjun_mehta_strong_match_page-0001.jpg (ext=.jpg)
+[2026-06-04 13:14:17] [INFO] resume_processing: [EXTRACTOR] Routing to Tesseract OCR pipeline
+[2026-06-04 13:14:18] [INFO] resume_processing: [OCR] Tesseract extracted 1873 characters
+[2026-06-04 13:14:18] [DEBUG] resume_processing: [OCR] TESSERACT RAW OUTPUT:
+Arjun. Mehta :.cszes3210 | linkedin.com/in/arjunmehta | github.com/arjunmehta | Hyderabad, India
+PROFESSIONAL SUMMARY
+Senior Frontend Developer with 7+ years of experience building scalable, responsive, and accessible web applications.
+Expert in the React ecosystem with deep knowledge of Redux state management, component architecture, and
+performance optimization. Proven track record of leading cross-functional teams and delivering enterprise-grade solutions.
+TECHNICAL SKILLS
+Frameworks & Libraries: React.js, Redux, TypeScript, Angular, Next.js
+Core Technologies: HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL
+Tools & DevOps: Docker, Webpack, Git, CI/CD Pipelines, Jest, Cypress
+Other: Accessibility (WCAG), Agile/Scrum, Code Review, Mentoring
+PROFESSIONAL EXPERIENCE
+Senior Frontend Developer — TechCorp Solutions
+Jan 2020 — Present | Hyderabad, India
++ Led Ul development for a SaaS platform serving 500K+ users, improving load time by 35% through code splitting and
+lazy loading.
++ Built a reusable React component library used across 5 product teams, reducing development time by 40%.
++ Implemented Redux Toolkit for state management across 10+ modules, reducing bug reports by 25%.
+* Containerized the frontend application using Docker and integrated into CI/CD pipelines for seamless deployments.
++ Mentored a team of 4 junior developers through code reviews and pair programming sessions.
+Frontend Developer — Infosys Limited
+Jun 2017 — Dec 2019 | Pune, India
++ Developed Angular-based enterprise dashboards for banking clients, handling real-time data visualization.
+* Collaborated with UX designers and backend engineers in Agile sprints to deliver features on schedule.
+* Optimized CSS and JavaScript bundles, reducing page load time by 20% across client applications.
+EDUCATION
+B.Tech in Computer Science — IIT Hyderabad
+Graduated: 2017 | GPA: 8.7/10
+
+[2026-06-04 13:14:18] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['html5', 'css3', 'javascript', 'es6+', 'react', 'angular']
+[2026-06-04 13:14:18] [INFO] resume_processing: [OLLAMA] Starting extraction for: resume_arjun_mehta_strong_match_page-0001.jpg | Uploaded by: mohan@synergy.com
+[2026-06-04 13:14:18] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-04 13:15:15] [INFO] resume_processing: [OLLAMA] Raw response received (647 chars)
+[2026-06-04 13:15:15] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information:
+
+NAME: Arjun Mehta
+EMAIL:
+PHONE:
+EXPERIENCE: 7
+SKILLS: React.js, Redux, TypeScript, Angular, Next.js, HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL, Docker, Webpack, Git, CI/CD Pipelines, Jest, Cypress
+FIT_SUMMARY: With a strong background in the React ecosystem and experience leading cross-functional teams, I excel at building scalable web applications. My expertise in Redux state management, component architecture, and performance optimization enables me to deliver high-quality solutions. As a senior frontend developer, I thrive in fast-paced environments and mentor junior developers.
+LLM_SCORE: 95
+[2026-06-04 13:15:15] [INFO] resume_processing: [OLLAMA] Extracted — Name: Arjun Mehta | Email:  | Score: 95 | Skills: ['React.js', 'Redux', 'TypeScript', 'Angular', 'Next.js', 'HTML5', 'CSS3', 'JavaScript (ES6+)', 'REST APIs', 'GraphQL', 'Docker', 'Webpack', 'Git', 'CI/CD Pipelines', 'Jest', 'Cypress']
+[2026-06-04 13:15:15] [INFO] resume_processing: [LOG] DB log saved for: resume_arjun_mehta_strong_match_page-0001.jpg
+[2026-06-04 13:17:34] [INFO] resume_processing: [EXTRACTOR] Django UploadedFile: resume_arjun_mehta_strong_match_page-0001.jpg (ext=.jpg)
+[2026-06-04 13:17:34] [INFO] resume_processing: [EXTRACTOR] Routing to Tesseract OCR pipeline
+[2026-06-04 13:17:35] [INFO] resume_processing: [OCR] Tesseract extracted 1873 characters
+[2026-06-04 13:17:35] [DEBUG] resume_processing: [OCR] TESSERACT RAW OUTPUT:
+Arjun. Mehta :.cszes3210 | linkedin.com/in/arjunmehta | github.com/arjunmehta | Hyderabad, India
+PROFESSIONAL SUMMARY
+Senior Frontend Developer with 7+ years of experience building scalable, responsive, and accessible web applications.
+Expert in the React ecosystem with deep knowledge of Redux state management, component architecture, and
+performance optimization. Proven track record of leading cross-functional teams and delivering enterprise-grade solutions.
+TECHNICAL SKILLS
+Frameworks & Libraries: React.js, Redux, TypeScript, Angular, Next.js
+Core Technologies: HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL
+Tools & DevOps: Docker, Webpack, Git, CI/CD Pipelines, Jest, Cypress
+Other: Accessibility (WCAG), Agile/Scrum, Code Review, Mentoring
+PROFESSIONAL EXPERIENCE
+Senior Frontend Developer — TechCorp Solutions
+Jan 2020 — Present | Hyderabad, India
++ Led Ul development for a SaaS platform serving 500K+ users, improving load time by 35% through code splitting and
+lazy loading.
++ Built a reusable React component library used across 5 product teams, reducing development time by 40%.
++ Implemented Redux Toolkit for state management across 10+ modules, reducing bug reports by 25%.
+* Containerized the frontend application using Docker and integrated into CI/CD pipelines for seamless deployments.
++ Mentored a team of 4 junior developers through code reviews and pair programming sessions.
+Frontend Developer — Infosys Limited
+Jun 2017 — Dec 2019 | Pune, India
++ Developed Angular-based enterprise dashboards for banking clients, handling real-time data visualization.
+* Collaborated with UX designers and backend engineers in Agile sprints to deliver features on schedule.
+* Optimized CSS and JavaScript bundles, reducing page load time by 20% across client applications.
+EDUCATION
+B.Tech in Computer Science — IIT Hyderabad
+Graduated: 2017 | GPA: 8.7/10
+
+[2026-06-04 13:17:35] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['html5', 'css3', 'javascript', 'es6+', 'react', 'angular']
+[2026-06-04 13:17:35] [INFO] resume_processing: [OLLAMA] Starting extraction for: resume_arjun_mehta_strong_match_page-0001.jpg | Uploaded by: mohan@synergy.com
+[2026-06-04 13:17:35] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-04 13:18:13] [INFO] resume_processing: [OLLAMA] Raw response received (614 chars)
+[2026-06-04 13:18:13] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Arjun Mehta
+EMAIL: 
+PHONE: 
+EXPERIENCE: 7
+SKILLS: React.js, Redux, TypeScript, Angular, Next.js, HTML5, CSS3, JavaScript (ES6+), REST APIs, GraphQL, Docker, Webpack, Git, CI/CD Pipelines, Jest, Cypress
+FIT_SUMMARY: With a strong background in the React ecosystem, Arjun has consistently delivered scalable and responsive web applications while leading cross-functional teams. His expertise in Redux state management, component architecture, and performance optimization enables him to optimize system efficiency. He is also well-versed in Agile/Scrum methodologies.
+LLM_SCORE: 92
+[2026-06-04 13:18:13] [INFO] resume_processing: [OLLAMA] Extracted — Name: Arjun Mehta | Email:  | Score: 92 | Skills: ['React.js', 'Redux', 'TypeScript', 'Angular', 'Next.js', 'HTML5', 'CSS3', 'JavaScript (ES6+)', 'REST APIs', 'GraphQL', 'Docker', 'Webpack', 'Git', 'CI/CD Pipelines', 'Jest', 'Cypress']
+[2026-06-04 13:18:13] [INFO] resume_processing: [LOG] DB log saved for: resume_arjun_mehta_strong_match_page-0001.jpg
+[2026-06-15 11:24:22] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 673 characters
+[2026-06-15 11:24:22] [INFO] resume_processing: [REGEX] Extracted — Name: Test Business | Email: admin@slicedinvoices.com | Skills: []
+[2026-06-15 11:24:22] [INFO] resume_processing: [OLLAMA] Starting extraction for: wordpress-pdf-invoice-plugin-sample.pdf | Uploaded by: mohan@synergy.com
+[2026-06-15 11:24:22] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Test Business | Email: admin@slicedinvoices.com
+[2026-06-15 11:24:56] [INFO] resume_processing: [OLLAMA] Raw response received (195 chars)
+[2026-06-15 11:24:56] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+NAME: admin@slicedinvoices.com
+EMAIL:
+PHONE:
+EXPERIENCE:
+SKILLS:
+FIT_SUMMARY: No relevant experience or skills mentioned. This appears to be an invoice document rather than a resume.
+LLM_SCORE: 0
+[2026-06-15 11:24:56] [INFO] resume_processing: [OLLAMA] Extracted — Name: admin@slicedinvoices.com | Email:  | Score: 0 | Skills: ['FIT_SUMMARY: No relevant experience or skills mentioned. This appears to be an invoice document rather than a resume.']
+[2026-06-15 11:24:56] [INFO] resume_processing: [LOG] DB log saved for: wordpress-pdf-invoice-plugin-sample.pdf
+[2026-06-15 11:24:59] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 1337 characters
+[2026-06-15 11:24:59] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email: varshini.reddy@email.com | Skills: ['javascript', 'react']
+[2026-06-15 11:24:59] [INFO] resume_processing: [OLLAMA] Starting extraction for: 01_Varshini_FullStack_Developer.pdf | Uploaded by: mohan@synergy.com
+[2026-06-15 11:24:59] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: varshini.reddy@email.com
+[2026-06-15 11:25:33] [INFO] resume_processing: [OLLAMA] Raw response received (397 chars)
+[2026-06-15 11:25:33] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+NAME: Varshini Reddy
+EMAIL: varshini.reddy@email.com
+PHONE: 9876543210
+EXPERIENCE: 3
+SKILLS: React.js, Django, Python, JavaScript, REST APIs, PostgreSQL, Docker, Git, HTML/CSS, Redux
+FIT_SUMMARY: Results-driven Full Stack Developer with experience building scalable web applications using React.js and Django. Adept at translating business requirements into clean, maintainable code.
+LLM_SCORE: 90
+[2026-06-15 11:25:33] [INFO] resume_processing: [OLLAMA] Extracted — Name: Varshini Reddy | Email: varshini.reddy@email.com | Score: 90 | Skills: ['React.js', 'Django', 'Python', 'JavaScript', 'REST APIs', 'PostgreSQL', 'Docker', 'Git', 'HTML/CSS', 'Redux']
+[2026-06-15 11:25:33] [INFO] resume_processing: [LOG] DB log saved for: 01_Varshini_FullStack_Developer.pdf
+[2026-06-15 16:31:59] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 3372 characters
+[2026-06-15 16:31:59] [INFO] resume_processing: [REGEX] Extracted — Name: Plastics Manufacturing Processes | Email:  | Skills: []
+[2026-06-15 16:31:59] [INFO] resume_processing: [OLLAMA] Starting extraction for: 38314236.pdf | Uploaded by: mohan@synergy.com
+[2026-06-15 16:31:59] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Plastics Manufacturing Processes | Email: 
+[2026-06-15 16:32:56] [INFO] resume_processing: [OLLAMA] Raw response received (504 chars)
+[2026-06-15 16:32:56] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: John Doe (assuming this is the full name, but it's not explicitly stated)
+
+EMAIL: 
+
+PHONE: 
+
+EXPERIENCE: 8
+
+SKILLS: AutoCAD, Algore FEA, Matlab, Microsoft Office, Ansys, LabView, ProE
+
+FIT_SUMMARY: This individual has a strong background in mechanical engineering and product design, with experience in CAD software and process engineering. They have also demonstrated leadership skills through their roles as Engineering Supervisor and Project Engineer.
+
+LLM_SCORE: 40
+[2026-06-15 16:32:56] [INFO] resume_processing: [OLLAMA] Extracted — Name: John Doe (assuming this is the full name, but it's not explicitly stated) | Email:  | Score: 40 | Skills: ['AutoCAD', 'Algore FEA', 'Matlab', 'Microsoft Office', 'Ansys', 'LabView', 'ProE']
+[2026-06-15 16:32:56] [INFO] resume_processing: [LOG] DB log saved for: 38314236.pdf
+[2026-06-16 10:11:37] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 1338 characters
+[2026-06-16 10:11:37] [INFO] resume_processing: [REGEX] Extracted — Name: Sarah Jenkins | Email: sarah.jenkins@email.com | Skills: ['html5', 'css3', 'javascript', 'es6+', 'react']
+[2026-06-16 10:11:37] [INFO] resume_processing: [OLLAMA] Starting extraction for: Text_to_PDF_Onlinenotpad.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 10:11:37] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Sarah Jenkins | Email: sarah.jenkins@email.com
+[2026-06-16 10:12:36] [INFO] resume_processing: [OLLAMA] Raw response received (541 chars)
+[2026-06-16 10:12:36] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Sarah Jenkins
+EMAIL: sarah.jenkins@email.com
+PHONE: 5550198
+EXPERIENCE: 6
+SKILLS: HTML5, CSS3, JavaScript, React, Redux, MobX, RESTful APIs, Webpack, Git
+FIT_SUMMARY: With over 6 years of experience as a senior frontend developer, Sarah has developed expertise in building high-performance web applications using React and modern JavaScript. Her skills include designing reusable UI components, optimizing accessibility standards (WCAG 2.1), and integrating Redux for global state management.
+LLM_SCORE: 85
+[2026-06-16 10:12:36] [INFO] resume_processing: [OLLAMA] Extracted — Name: Sarah Jenkins | Email: sarah.jenkins@email.com | Score: 85 | Skills: ['HTML5', 'CSS3', 'JavaScript', 'React', 'Redux', 'MobX', 'RESTful APIs', 'Webpack', 'Git']
+[2026-06-16 10:12:36] [INFO] resume_processing: [LOG] DB log saved for: Text_to_PDF_Onlinenotpad.pdf
+[2026-06-16 10:15:42] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 1338 characters
+[2026-06-16 10:15:42] [INFO] resume_processing: [REGEX] Extracted — Name: Sarah Jenkins | Email: sarah.jenkins@email.com | Skills: ['html5', 'css3', 'javascript', 'es6+', 'react']
+[2026-06-16 10:15:42] [INFO] resume_processing: [OLLAMA] Starting extraction for: Text_to_PDF_Onlinenotpad.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 10:15:42] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Sarah Jenkins | Email: sarah.jenkins@email.com
+[2026-06-16 10:16:15] [INFO] resume_processing: [OLLAMA] Raw response received (533 chars)
+[2026-06-16 10:16:15] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Sarah Jenkins
+EMAIL: sarah.jenkins@email.com
+PHONE: +15550198
+EXPERIENCE: 6
+SKILLS: HTML5, CSS3, JavaScript (ES6+), React, Redux, MobX, RESTful APIs, Webpack, Git
+FIT_SUMMARY: With over 6 years of experience as a Senior Frontend Developer, Sarah has developed reusable UI components and optimized web accessibility. Her expertise lies in building high-performance web applications using modern technologies like React and ES6+. She is well-versed in Redux for global state management.
+LLM_SCORE: 95
+[2026-06-16 10:16:15] [INFO] resume_processing: [OLLAMA] Extracted — Name: Sarah Jenkins | Email: sarah.jenkins@email.com | Score: 95 | Skills: ['HTML5', 'CSS3', 'JavaScript (ES6+)', 'React', 'Redux', 'MobX', 'RESTful APIs', 'Webpack', 'Git']
+[2026-06-16 10:16:15] [INFO] resume_processing: [LOG] DB log saved for: Text_to_PDF_Onlinenotpad.pdf
+[2026-06-16 11:19:39] [WARNING] resume_processing: [EXTRACTOR] PyPDF2 failed: EOF marker not found
+[2026-06-16 11:19:39] [WARNING] resume_processing: [EXTRACTOR] PDF text too short, falling back to Tesseract via PyMuPDF render
+[2026-06-16 11:19:39] [ERROR] resume_processing: [EXTRACTOR] PDF vision fallback failed: Failed to open stream
+[2026-06-16 11:19:41] [WARNING] resume_processing: [EXTRACTOR] PyPDF2 failed: EOF marker not found
+[2026-06-16 11:19:41] [WARNING] resume_processing: [EXTRACTOR] PDF text too short, falling back to Tesseract via PyMuPDF render
+[2026-06-16 11:19:41] [ERROR] resume_processing: [EXTRACTOR] PDF vision fallback failed: Failed to open stream
+[2026-06-16 11:19:43] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 833 characters
+[2026-06-16 11:19:43] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 11:19:43] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume1_Rahul_Sharma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 11:19:43] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 11:20:27] [INFO] resume_processing: [OLLAMA] Raw response received (454 chars)
+[2026-06-16 11:20:27] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Rahul Sharma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 3
+SKILLS: JavaScript, React.js, Node.js, Express.js, MongoDB, PostgreSQL, HTML5, CSS3, Git, Docker, AWS, Jenkins, REST APIs
+FIT_SUMMARY: Full Stack Developer with experience building scalable web applications using React, Node.js, and MongoDB. Proficient in skills such as JavaScript, React.js, Node.js, and more. Strong understanding of Agile/Scrum methodologies.
+LLM_SCORE: 85
+[2026-06-16 11:20:27] [INFO] resume_processing: [OLLAMA] Extracted — Name: Rahul Sharma | Email:  | Score: 85 | Skills: ['JavaScript', 'React.js', 'Node.js', 'Express.js', 'MongoDB', 'PostgreSQL', 'HTML5', 'CSS3', 'Git', 'Docker', 'AWS', 'Jenkins', 'REST APIs']
+[2026-06-16 11:20:27] [INFO] resume_processing: [LOG] DB log saved for: Resume1_Rahul_Sharma.pdf
+[2026-06-16 12:15:01] [INFO] resume_processing: [EXTRACTOR] Django UploadedFile: Resume1_Rahul_Sharma.pdf (ext=.pdf)
+[2026-06-16 12:15:01] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 833 characters
+[2026-06-16 12:15:01] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 12:15:01] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume1_Rahul_Sharma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 12:15:01] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 12:15:45] [INFO] resume_processing: [OLLAMA] Raw response received (438 chars)
+[2026-06-16 12:15:45] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Rahul Sharma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 4
+SKILLS: JavaScript, React.js, Node.js, Express.js, MongoDB, PostgreSQL, HTML5, CSS3, Git, Docker, AWS, Jenkins
+FIT_SUMMARY: Experienced full stack developer with expertise in building scalable web applications using React and Node.js. Strong understanding of REST APIs, Agile/Scrum, and CI/CD pipelines. Proficient in mentoring junior developers.
+LLM_SCORE: 85
+[2026-06-16 12:15:45] [INFO] resume_processing: [OLLAMA] Extracted — Name: Rahul Sharma | Email:  | Score: 85 | Skills: ['JavaScript', 'React.js', 'Node.js', 'Express.js', 'MongoDB', 'PostgreSQL', 'HTML5', 'CSS3', 'Git', 'Docker', 'AWS', 'Jenkins']
+[2026-06-16 12:15:45] [INFO] resume_processing: [LOG] DB log saved for: Resume1_Rahul_Sharma.pdf
+[2026-06-16 12:36:17] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 833 characters
+[2026-06-16 12:36:17] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 12:36:17] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume1_Rahul_Sharma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 12:36:17] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 12:37:06] [INFO] resume_processing: [OLLAMA] Raw response received (540 chars)
+[2026-06-16 12:37:06] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information:
+
+NAME: Rahul Sharma
+EMAIL: <blank> (no valid email address provided)
+PHONE: <blank> (no phone number mentioned)
+EXPERIENCE: 3
+SKILLS: JavaScript, React.js, Node.js, Express.js, MongoDB, PostgreSQL, HTML5, CSS3, Git, Docker, AWS, Jenkins, REST APIs
+FIT_SUMMARY: With a strong foundation in Full Stack Development, I bring experience building scalable web applications using React, Node.js, and Express. Proficient in Agile/Scrum methodologies and passionate about mentoring junior developers.
+LLM_SCORE: 90
+[2026-06-16 12:37:06] [INFO] resume_processing: [OLLAMA] Extracted — Name: Rahul Sharma | Email:  | Score: 90 | Skills: ['JavaScript', 'React.js', 'Node.js', 'Express.js', 'MongoDB', 'PostgreSQL', 'HTML5', 'CSS3', 'Git', 'Docker', 'AWS', 'Jenkins', 'REST APIs']
+[2026-06-16 12:37:06] [INFO] resume_processing: [LOG] DB log saved for: Resume1_Rahul_Sharma.pdf
+[2026-06-16 12:38:41] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 673 characters
+[2026-06-16 12:38:41] [INFO] resume_processing: [REGEX] Extracted — Name: Test Business | Email: admin@slicedinvoices.com | Skills: []
+[2026-06-16 12:38:41] [INFO] resume_processing: [OLLAMA] Starting extraction for: wordpress-pdf-invoice-plugin-sample.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 12:38:41] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Test Business | Email: admin@slicedinvoices.com
+[2026-06-16 12:39:04] [INFO] resume_processing: [OLLAMA] Raw response received (238 chars)
+[2026-06-16 12:39:04] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+NAME: Unknown
+EMAIL: admin@slicedinvoices.com
+PHONE: 
+EXPERIENCE: 
+SKILLS: 
+FIT_SUMMARY: There is no relevant information about a person or their skills in this resume. It appears to be an invoice from DEMO - Sliced Invoices.
+LLM_SCORE: 0
+[2026-06-16 12:39:04] [INFO] resume_processing: [OLLAMA] Extracted — Name: Unknown | Email: admin@slicedinvoices.com | Score: 0 | Skills: ['FIT_SUMMARY: There is no relevant information about a person or their skills in this resume. It appears to be an invoice from DEMO', 'Sliced Invoices.']
+[2026-06-16 12:39:04] [INFO] resume_processing: [LOG] DB log saved for: wordpress-pdf-invoice-plugin-sample.pdf
+[2026-06-16 12:39:11] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 3483 characters
+[2026-06-16 12:39:11] [INFO] resume_processing: [REGEX] Extracted — Name: Sample Data File | Email:  | Skills: []
+[2026-06-16 12:39:11] [INFO] resume_processing: [OLLAMA] Starting extraction for: c4611_sample_explain.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 12:39:11] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Sample Data File | Email: 
+[2026-06-16 12:39:50] [INFO] resume_processing: [OLLAMA] Raw response received (289 chars)
+[2026-06-16 12:39:50] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information:
+
+NAME: No full name mentioned.
+EMAIL: Blank
+PHONE: Blank
+EXPERIENCE: Blank
+SKILLS: None mentioned
+FIT_SUMMARY: No relevant information provided about the candidate's fit for a frontend developer role.
+LLM_SCORE: 0 (since no relevant skills are mentioned)
+[2026-06-16 12:39:50] [INFO] resume_processing: [OLLAMA] Extracted — Name: No full name mentioned. | Email:  | Score: 0 | Skills: ['None mentioned']
+[2026-06-16 12:39:50] [INFO] resume_processing: [LOG] DB log saved for: c4611_sample_explain.pdf
+[2026-06-16 14:15:21] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 833 characters
+[2026-06-16 14:15:21] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 14:15:21] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume1_Rahul_Sharma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 14:15:21] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 14:16:04] [INFO] resume_processing: [OLLAMA] Raw response received (414 chars)
+[2026-06-16 14:16:04] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information:
+
+NAME: Rahul Sharma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 3
+SKILLS: JavaScript, React.js, Node.js, Express.js, MongoDB, PostgreSQL, HTML5, CSS3, Git, Docker, AWS, Jenkins
+FIT_SUMMARY: Full Stack Developer with experience building scalable web applications using React, Node.js, and MongoDB. Proficient in REST APIs, Agile/Scrum, and CI/CD pipelines. Strong mentorship skills.
+LLM_SCORE: 90
+[2026-06-16 14:16:04] [INFO] resume_processing: [OLLAMA] Extracted — Name: Rahul Sharma | Email:  | Score: 90 | Skills: ['JavaScript', 'React.js', 'Node.js', 'Express.js', 'MongoDB', 'PostgreSQL', 'HTML5', 'CSS3', 'Git', 'Docker', 'AWS', 'Jenkins']
+[2026-06-16 14:16:04] [INFO] resume_processing: [LOG] DB log saved for: Resume1_Rahul_Sharma.pdf
+[2026-06-16 14:32:32] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 3483 characters
+[2026-06-16 14:32:32] [INFO] resume_processing: [REGEX] Extracted — Name: Sample Data File | Email:  | Skills: []
+[2026-06-16 14:32:32] [INFO] resume_processing: [OLLAMA] Starting extraction for: c4611_sample_explain.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 14:32:32] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Sample Data File | Email: 
+[2026-06-16 14:33:17] [INFO] resume_processing: [OLLAMA] Raw response received (173 chars)
+[2026-06-16 14:33:17] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: None
+EMAIL:
+PHONE:
+EXPERIENCE: 
+SKILLS: 
+FIT_SUMMARY: This resume does not appear to be related to a frontend developer role.
+LLM_SCORE: 0
+[2026-06-16 14:33:17] [INFO] resume_processing: [OLLAMA] Extracted — Name: None | Email:  | Score: 0 | Skills: ['FIT_SUMMARY: This resume does not appear to be related to a frontend developer role.']
+[2026-06-16 14:33:17] [INFO] resume_processing: [LOG] DB log saved for: c4611_sample_explain.pdf
+[2026-06-16 14:33:24] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 833 characters
+[2026-06-16 14:33:24] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['html5', 'css3', 'javascript', 'react']
+[2026-06-16 14:33:24] [INFO] resume_processing: [OLLAMA] Starting extraction for: 20260616_141521_Resume1_Rahul_Sharma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 14:33:24] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 14:34:05] [INFO] resume_processing: [OLLAMA] Raw response received (544 chars)
+[2026-06-16 14:34:05] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information in the exact format:
+
+NAME: Rahul Sharma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 3
+SKILLS: JavaScript, React.js, Node.js, Express.js, MongoDB, PostgreSQL, HTML5, CSS3, Git, Docker, AWS, Jenkins, REST APIs
+FIT_SUMMARY: With 3 years of experience as a Full Stack Developer, Rahul has built scalable web applications using React, Node.js, and Express. He is proficient in skills such as MongoDB, PostgreSQL, and Agile/Scrum. His strengths include reducing page load time by 35% and implementing CI/CD pipelines.
+LLM_SCORE: 90
+[2026-06-16 14:34:05] [INFO] resume_processing: [OLLAMA] Extracted — Name: Rahul Sharma | Email:  | Score: 90 | Skills: ['JavaScript', 'React.js', 'Node.js', 'Express.js', 'MongoDB', 'PostgreSQL', 'HTML5', 'CSS3', 'Git', 'Docker', 'AWS', 'Jenkins', 'REST APIs']
+[2026-06-16 14:34:05] [INFO] resume_processing: [LOG] DB log saved for: 20260616_141521_Resume1_Rahul_Sharma.pdf

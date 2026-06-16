@@ -19,7 +19,8 @@ class CandidateResumeSerializer(serializers.ModelSerializer):
         fields = [
             "id", "job_request", "job_request_details",
             "uploaded_by", "uploaded_by_email",
-            "resume", "candidate_name", "email", "phone",
+            "resume_url",  # ✅ CHANGED: from "resume" to "resume_url"
+            "candidate_name", "email", "phone",
             "skills", "experience", "resume_text",
             "match_percentage", "is_shortlisted", "uploaded_at", "fit_summary", "interview_status"
         ]
@@ -27,6 +28,7 @@ class CandidateResumeSerializer(serializers.ModelSerializer):
             "uploaded_by", "match_percentage", "is_shortlisted",
             "uploaded_at", "candidate_name", "email", "phone",
             "skills", "experience", "resume_text", "fit_summary", "interview_status"
+            # Note: "resume_url" is NOT read_only so the frontend can send it
         ]
 
     # ✅ THIS FUNCTION MUST BE OUT HERE (Same level as class Meta, NOT inside it!)

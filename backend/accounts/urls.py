@@ -16,7 +16,7 @@ urlpatterns = [
     path("token/", CustomTokenObtainPairView.as_view()),
     path("me/", MeView.as_view()),
     path("employees/", EmployeeListView.as_view()),
-    path("employees/create/", CreateEmployeeView.as_view()),
+    path("create-employee/", CreateEmployeeView.as_view()),
     path("employees/<int:pk>/update/", UpdateEmployeeView.as_view()),
     path("employees/<int:pk>/delete/", DeleteEmployeeView.as_view()),
     path("change-password/", ChangePasswordView.as_view()),
