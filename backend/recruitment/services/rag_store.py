@@ -25,6 +25,7 @@ _CHROMA_PATH = os.path.join(_BASE_DIR, "chroma_db")
 _client = None
 _job_collection = None
 _match_collection = None
+_resume_collection = None 
 
 
 def _get_client():
@@ -198,7 +199,6 @@ def retrieve_job_context(job_request, resume_text: str, n_results: int = 2) -> s
                     similar_jobs = "\n\nSIMILAR APPROVED ROLES (for context):\n" + "\n---\n".join(similar[:1])
 
         return primary + similar_jobs
-
     except Exception as e:
         print(f"[RAG] retrieve_job_context error: {e}")
         # Graceful fallback — just return the job text
@@ -234,3 +234,95 @@ def retrieve_past_matches(resume_text: str, job_title: str,
     except Exception as e:
         print(f"[RAG] retrieve_past_matches error: {e}")
         return ""
+def _get_resume_collection():
+    global _resume_collection
+    if _resume_collection is None:
+        _resume_collection = _get_client().get_or_create_collection(
+            name="resumes",
+            metadata={"hnsw:space": "cosine"}
+        )
+    return _resume_collection
+ 
+ 
+# ── Resume indexing ────────────────────────────────────────────────────────
+ 
+def index_resume(resume_id, redacted_text: str, job_request_id, original_filename: str = "") -> str | bool:
+    """
+    Embed and store a resume's REDACTED text in ChromaDB.
+ 
+    Call this once per resume, right after PII redaction, regardless
+    of which upload path (bulk, single-URL, SharePoint screening) the
+    resume came through.
+ 
+    Returns the chroma_id (== str(resume_id)) on success, so the
+    caller can save it onto CandidateResume.chroma_id. Returns False
+    on failure (e.g. embedding model unreachable) — callers should
+    treat this the same way index_job_request() treats a False return:
+    log it and move on, don't block the rest of the pipeline on it.
+    """
+    try:
+        embedding = _embed(redacted_text[:8000])
+        if not embedding:
+            return False
+ 
+        chroma_id = str(resume_id)
+        collection = _get_resume_collection()
+        collection.upsert(
+            ids=[chroma_id],
+            embeddings=[embedding],
+            documents=[redacted_text],
+            metadatas=[{
+                "resume_id":         str(resume_id),
+                "job_request_id":    str(job_request_id),
+                "original_filename": original_filename or "",
+            }]
+        )
+        print(f"[RAG] Indexed resume #{resume_id} for job #{job_request_id}")
+        return chroma_id
+    except Exception as e:
+        print(f"[RAG] index_resume error: {e}")
+        return False
+ 
+ 
+# ── Resume retrieval (the pre-filter step) ────────────────────────────────
+ 
+def find_similar_resumes(job_request, top_n: int = 15) -> list:
+    """
+    Given a job request, return the IDs of the top_n most similar
+    resumes already indexed, restricted to resumes uploaded for
+    THIS job (so you're not matching candidates against an unrelated
+    role's resume pool).
+ 
+    This is the "Stage 1 retrieval" step in the retrieve-then-rerank
+    pattern — fast vector similarity narrows the field BEFORE the
+    expensive LLM scoring step runs on just these results.
+ 
+    Returns a list of resume_id strings (matching CandidateResume.id),
+    NOT chroma_ids directly, since chroma_id == str(resume_id) by
+    construction in index_resume() above.
+    """
+    try:
+        query_text = _build_job_doc(job_request)
+        embedding = _embed(query_text)
+        if not embedding:
+            print("[RAG] find_similar_resumes: embedding failed, returning empty list")
+            return []
+ 
+        collection = _get_resume_collection()
+        count = collection.count()
+        if count == 0:
+            return []
+ 
+        results = collection.query(
+            query_embeddings=[embedding],
+            n_results=min(top_n, count),
+            where={"job_request_id": str(job_request.id)},
+        )
+ 
+        ids = results.get("ids", [[]])[0]
+        print(f"[RAG] find_similar_resumes: {len(ids)} candidates for job #{job_request.id}")
+        return ids
+ 
+    except Exception as e:
+        print(f"[RAG] find_similar_resumes error: {e}")
+        return []

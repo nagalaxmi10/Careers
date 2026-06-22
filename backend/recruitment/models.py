@@ -7,21 +7,30 @@ class CandidateResume(models.Model):
     job_request = models.ForeignKey(JobRequest, on_delete=models.CASCADE, related_name="resumes")
     uploaded_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, related_name="uploaded_resumes")
     resume_file = models.FileField(upload_to="resumes/", blank=True, null=True)
-    # ✅ CHANGED: From FileField to URLField
     resume_url = models.URLField(max_length=500, blank=True, help_text="Direct link to the candidate's resume")
-    
+ 
     candidate_name = models.CharField(max_length=255, blank=True)
     email = models.EmailField(blank=True)
     phone = models.CharField(max_length=20, blank=True)
+ 
+    # ✅ NEW — extracted via regex from the ORIGINAL (unredacted) resume text,
+    # same path as name/email/phone. Never sent to the LLM or embedded.
+    linkedin_url = models.URLField(max_length=500, blank=True)
+    github_url = models.URLField(max_length=500, blank=True)
+ 
     skills = models.JSONField(default=list)
     experience = models.FloatField(default=0)
     resume_text = models.TextField(blank=True)
     match_percentage = models.FloatField(default=0)
     is_shortlisted = models.BooleanField(default=False)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    original_filename = models.CharField(max_length=255, blank=True, null=True)  # ← ADD THIS
+    original_filename = models.CharField(max_length=255, blank=True, null=True)
     fit_summary = models.TextField(blank=True)
-
+ 
+    # ✅ NEW — links this SQLite row to its vector in ChromaDB, so a resume's
+    # embedding can be found/updated/deleted in sync with this record.
+    chroma_id = models.CharField(max_length=64, blank=True, null=True)
+ 
     def __str__(self):
         return self.candidate_name or "Unknown Candidate"
 

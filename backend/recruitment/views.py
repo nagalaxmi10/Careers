@@ -26,6 +26,7 @@ from .serializers import (
     EmailLogSerializer
 )
 from jobs.models import JobRequest
+from .services.pii_redactor import extract_pii, redact_pii
 from .services.resume_matcher import match_resume
 from .services.resume_extractor import extract_text_from_file, extract_with_ollama, _is_valid_name
 from .email_service import send_interview_email
@@ -82,9 +83,15 @@ def _process_resume(resume, resume_text, job_request, filename="", uploaded_by="
     """Shared logic: score and save a CandidateResume instance."""
     required_skills = job_request.skills_list() or []
 
+    # ✅ NEW — extract PII from the ORIGINAL text, independent of the LLM
+    pii = extract_pii(resume_text)
+
+    # ✅ NEW — redact PII before anything reaches Ollama
+    redacted_text = redact_pii(resume_text)
+
     if result is None:
         result = extract_with_ollama(
-            resume_text, required_skills,
+            redacted_text, required_skills,            # ← was resume_text, now redacted_text
             job_context="", past_matches="",
             filename=filename, uploaded_by=str(uploaded_by)
         )
@@ -108,7 +115,7 @@ def _process_resume(resume, resume_text, job_request, filename="", uploaded_by="
     except (TypeError, ValueError):
         experience = 0.0
 
-    exp_score     = _experience_score(experience, getattr(job_request, "experience_required", 0))
+    exp_score      = _experience_score(experience, getattr(job_request, "experience_required", 0))
     computed_score = _compute_score(keyword_score, llm_score, exp_score)
 
     print(f"=== FINAL SCORING ===")
@@ -117,19 +124,22 @@ def _process_resume(resume, resume_text, job_request, filename="", uploaded_by="
     print(f"Experience Score: {exp_score}")
     print(f"Final Score:      {computed_score}")
 
-    extracted_name = result.get("name", "")
-    if not extracted_name or not _is_valid_name(extracted_name):
-        if result.get("email") and "@" in result["email"]:
-            extracted_name = result["email"].split("@")[0].replace(".", " ").replace("_", " ").title()
+    # ✅ CHANGED — name now comes from extract_pii, not the LLM result/fallback chain
+    extracted_name = pii["name"] if _is_valid_name(pii["name"]) else ""
+    if not extracted_name:
+        if pii["email"]:
+            extracted_name = pii["email"].split("@")[0].replace(".", " ").replace("_", " ").title()
         elif filename:
             extracted_name = filename.rsplit('.', 1)[0].replace('_', ' ').replace('-', ' ').title()
         else:
             extracted_name = ""
 
-    resume.resume_text      = resume_text
-    resume.candidate_name   = extracted_name
-    resume.email            = result.get("email", "")
-    resume.phone            = result.get("phone", "")
+    resume.resume_text      = resume_text          # keep original text for HR to read
+    resume.candidate_name   = extracted_name        # ✅ from extract_pii
+    resume.email            = pii["email"]          # ✅ from extract_pii
+    resume.phone            = pii["phone"]          # ✅ from extract_pii
+    resume.linkedin_url     = pii["linkedin_url"]   # ✅ NEW field, from extract_pii
+    resume.github_url       = pii["github_url"]     # ✅ NEW field, from extract_pii
     resume.experience       = experience
     resume.skills           = extracted_skills
     resume.match_percentage = computed_score
@@ -206,12 +216,18 @@ class CandidateResumeViewSet(ModelViewSet):
             return
 
         from .services.rag_store import retrieve_job_context, retrieve_past_matches, index_past_match, index_job_request
-        job_context  = retrieve_job_context(job_request, resume_text)
-        past_matches = retrieve_past_matches(resume_text, job_request.title)
+        from .services.pii_redactor import extract_pii, redact_pii   # ✅ NEW
+
+        # ✅ NEW — extract PII from original text, redact before anything else touches it
+        pii = extract_pii(resume_text)
+        redacted_text = redact_pii(resume_text)
+
+        job_context  = retrieve_job_context(job_request, redacted_text)        # ← was resume_text
+        past_matches = retrieve_past_matches(redacted_text, job_request.title) # ← was resume_text
 
         required_skills = job_request.skills_list() or []
         result = extract_with_ollama(
-            resume_text, required_skills, job_context, past_matches,
+            redacted_text, required_skills, job_context, past_matches,        # ← was resume_text
             filename=resume_url, uploaded_by=str(user)
         )
 
@@ -241,17 +257,20 @@ class CandidateResumeViewSet(ModelViewSet):
         print(f"Experience Score: {exp_score}")
         print(f"Final Score:      {computed_score}")
 
-        extracted_name = result.get("name", "")
-        if not extracted_name or not _is_valid_name(extracted_name):
-            if result.get("email") and "@" in result["email"]:
-                extracted_name = result["email"].split("@")[0].replace(".", " ").replace("_", " ").title()
+        # ✅ CHANGED — name/email/phone now come from extract_pii, not the LLM result
+        extracted_name = pii["name"]
+        if not extracted_name:
+            if pii["email"]:
+                extracted_name = pii["email"].split("@")[0].replace(".", " ").replace("_", " ").title()
             else:
                 extracted_name = ""
 
-        resume.resume_text      = resume_text
-        resume.candidate_name   = extracted_name
-        resume.email            = result.get("email", "")
-        resume.phone            = result.get("phone", "")
+        resume.resume_text      = resume_text          # keep original for HR to read
+        resume.candidate_name   = extracted_name        # ✅ from extract_pii
+        resume.email            = pii["email"]          # ✅ from extract_pii
+        resume.phone            = pii["phone"]          # ✅ from extract_pii
+        resume.linkedin_url     = pii["linkedin_url"]   # ✅ NEW
+        resume.github_url       = pii["github_url"]     # ✅ NEW
         resume.experience       = experience
         resume.skills           = extracted_skills
         resume.match_percentage = computed_score
@@ -261,7 +280,7 @@ class CandidateResumeViewSet(ModelViewSet):
 
         if resume.is_shortlisted:
             ShortlistedCandidate.objects.get_or_create(candidate=resume)
-            index_past_match(resume.id, resume_text, job_request.title, extracted_skills, computed_score, resume.fit_summary)
+            index_past_match(resume.id, redacted_text, job_request.title, extracted_skills, computed_score, resume.fit_summary)  # ← redacted_text now
 
         index_job_request(job_request)
 
@@ -464,6 +483,7 @@ def serve_resume(request, pk):
     except CandidateResume.DoesNotExist:
         return Response({"error": "Resume not found"}, status=404)
 
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def resend_email_view(request, log_id):
@@ -481,9 +501,9 @@ def resend_email_view(request, log_id):
     try:
         from django.core.mail import send_mail
         send_mail(
-            subject      = log.subject,
-            message      = log.body,
-            from_email   = None,
+            subject        = log.subject,
+            message        = log.body,
+            from_email     = None,
             recipient_list = [log.to],
             fail_silently  = False,
             html_message   = log.body
@@ -697,6 +717,7 @@ class RunSharePointScreeningView(APIView):
             "results": results,
         })
 
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def upload_and_screen(request):
@@ -705,6 +726,7 @@ def upload_and_screen(request):
 
     job_request_id = request.data.get("job_request")
     files = request.FILES.getlist("files")
+    top_n = int(request.data.get("top_n", 15))   # ✅ NEW — optional, defaults to 15
 
     if not job_request_id or not files:
         return Response({"error": "Job ID and files are required."}, status=400)
@@ -715,9 +737,14 @@ def upload_and_screen(request):
         return Response({"error": "Approved job request not found."}, status=404)
 
     from .services.sharepoint_service import upload_resume_to_sharepoint
+    from .services.pii_redactor import extract_pii, redact_pii
+    from .services.rag_store import index_resume, find_similar_resumes   # ✅ NEW
 
     results = []
     required_skills = job_request.skills_list() or []
+
+    # ── PASS 1 — extract, redact, save, embed every file. No LLM scoring yet. ──
+    pending = []   # list of dicts holding everything PASS 2 needs per resume
 
     for f in files:
         fname = f.name
@@ -738,20 +765,8 @@ def upload_and_screen(request):
                 results.append({"file": fname, "error": "Unreadable or empty PDF"})
                 continue
 
-            result = extract_with_ollama(
-                resume_text, required_skills,
-                job_context="", past_matches="",
-                filename=fname, uploaded_by=str(request.user)
-            )
-            if not result:
-                result = {"name": "", "email": "", "phone": "", "experience": 0.0,
-                          "skills": [], "score": 0.0, "fit_summary": "", "llm_score": 0}
-
-            skills_list = (
-                result["skills"] if isinstance(result["skills"], list)
-                else [s.strip() for s in result["skills"].split(",") if s.strip()]
-            )
-            skillset_str = ", ".join(skills_list)
+            pii = extract_pii(resume_text)
+            redacted_text = redact_pii(resume_text)
 
             resume = CandidateResume.objects.create(
                 job_request       = job_request,
@@ -759,33 +774,86 @@ def upload_and_screen(request):
                 original_filename = sp_filename,
                 resume_url        = "",
                 resume_text       = resume_text,
+                candidate_name    = pii["name"],
+                email             = pii["email"],
+                phone             = pii["phone"],
+                linkedin_url      = pii["linkedin_url"],
+                github_url        = pii["github_url"],
             )
 
-            score = _process_resume(
-                resume, resume_text, job_request,
-                filename=fname, uploaded_by=str(request.user),
-                result=result,
+            chroma_id = index_resume(
+                resume_id=resume.id,
+                redacted_text=redacted_text,
+                job_request_id=job_request.id,
+                original_filename=sp_filename,
             )
+            if chroma_id:
+                resume.chroma_id = chroma_id
+                resume.save(update_fields=["chroma_id"])
 
-            upload_resume_to_sharepoint(sp_filename, file_bytes, skillset_str)
-
-            results.append({
-                "file":      fname,
-                "candidate": resume.candidate_name or "Unknown",
-                "score":     score,
-                "status":    "Shortlisted" if score >= 65.0 else "Not Shortlisted",
+            pending.append({
+                "resume": resume,
+                "redacted_text": redacted_text,
+                "fname": fname,
+                "sp_filename": sp_filename,
+                "file_bytes": file_bytes,
             })
 
         except Exception as e:
             print(f"[Upload & Screen] Error on {fname}: {e}")
             results.append({"file": fname, "error": str(e)})
 
-    shortlisted = len([r for r in results if r.get("status") == "Shortlisted"])
+    if not pending:
+        return Response({"message": "No resumes could be processed.", "results": results})
+
+    # ── PASS 2 — similarity pre-filter, THEN LLM-score only the top-N ───────────
+    similar_ids = set(find_similar_resumes(job_request, top_n=top_n))
+
+    shortlisted_count = 0
+
+    for item in pending:
+        resume = item["resume"]
+
+        if str(resume.id) not in similar_ids:
+            results.append({
+                "file": item["fname"],
+                "candidate": resume.candidate_name or "Unknown",
+                "status": "Not pre-filtered (low similarity to job)",
+            })
+            continue
+
+        try:
+            score = _process_resume(
+                resume, resume.resume_text, job_request,
+                filename=item["fname"], uploaded_by=str(request.user),
+            )
+
+            if resume.is_shortlisted:
+                shortlisted_count += 1
+                skills_str = ", ".join(resume.skills) if isinstance(resume.skills, list) else ""
+                upload_resume_to_sharepoint(
+                    item["sp_filename"], item["file_bytes"], skills_str
+                )
+
+            results.append({
+                "file":      item["fname"],
+                "candidate": resume.candidate_name or "Unknown",
+                "score":     score,
+                "status":    "Shortlisted" if resume.is_shortlisted else "Not Shortlisted",
+            })
+
+        except Exception as e:
+            print(f"[Upload & Screen] Scoring error on {item['fname']}: {e}")
+            results.append({"file": item["fname"], "error": str(e)})
+
     return Response({
-        "message": f"Processed {len(results)} resume(s). {shortlisted} shortlisted.",
+        "message": f"Uploaded {len(pending)} resume(s). {shortlisted_count} shortlisted.",
         "results": results,
     })
+
+
 from collections import Counter
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])

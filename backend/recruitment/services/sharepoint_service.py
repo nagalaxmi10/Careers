@@ -3,36 +3,42 @@ import base64
 import os
 import tempfile
 
-# ── GET endpoint (fetch/download files from SharePoint) ───────────────────────
-POWER_PLATFORM_GET_URL  = os.environ.get("SHAREPOINT_GET_URL")
-POWER_PLATFORM_POST_URL = os.environ.get("SHAREPOINT_POST_URL")
+def _get_url():
+    return os.environ.get("SHAREPOINT_GET_URL")
 
-POWER_PLATFORM_GET_PARAMS = {
-    "api-version": "1",
-    "sp": "/triggers/manual/run",
-    "sv": "1.0",
-    "sig": os.environ.get("SHAREPOINT_GET_SIG"),
-}
+def _post_url():
+    return os.environ.get("SHAREPOINT_POST_URL")
 
-POWER_PLATFORM_POST_PARAMS = {
-    "api-version": "1",
-    "sp": "/triggers/manual/run",
-    "sv": "1.0",
-    "sig": os.environ.get("SHAREPOINT_POST_SIG"),
-}
+def _get_params(**extra):
+    return {
+        "api-version": "1",
+        "sp": "/triggers/manual/run",
+        "sv": "1.0",
+        "sig": os.environ.get("SHAREPOINT_GET_SIG"),
+        **extra
+    }
+
+def _post_params():
+    return {
+        "api-version": "1",
+        "sp": "/triggers/manual/run",
+        "sv": "1.0",
+        "sig": os.environ.get("SHAREPOINT_POST_SIG"),
+    }
+
+
 
 
 def get_all_filenames():
     try:
         response = requests.post(
-            POWER_PLATFORM_GET_URL,
-            params={**POWER_PLATFORM_GET_PARAMS, "fileName": "All"},
+            _get_url(),
+            params=_get_params(fileName="All"),
             timeout=30
         )
         response.raise_for_status()
         data = response.json()
-        filenames = [f for f in data if isinstance(f, str) and f.lower().endswith(".pdf")]
-        return filenames
+        return [f for f in data if isinstance(f, str) and f.lower().endswith(".pdf")]
     except Exception as e:
         print(f"[SharePoint] Failed to fetch filenames: {e}")
         return []
@@ -41,8 +47,8 @@ def get_all_filenames():
 def download_resume(filename):
     try:
         response = requests.post(
-            POWER_PLATFORM_GET_URL,
-            params={**POWER_PLATFORM_GET_PARAMS, "fileName": filename},
+            _get_url(),
+            params=_get_params(fileName=filename),
             timeout=60
         )
         response.raise_for_status()
@@ -58,10 +64,9 @@ def post_screening_result(filename, skillset):
         if not pdf_bytes:
             print(f"[SharePoint] Could not download {filename} for posting back.")
             return False
-
         response = requests.post(
-            POWER_PLATFORM_POST_URL,
-            params=POWER_PLATFORM_POST_PARAMS,
+            _post_url(),
+            params=_post_params(),
             files={"fileContent": (filename, pdf_bytes, "application/pdf")},
             data={"fileName": filename, "SkillSet": skillset},
             timeout=60
@@ -69,13 +74,14 @@ def post_screening_result(filename, skillset):
         response.raise_for_status()
         print(f"[SharePoint] Posted skillset for {filename}: {skillset}")
         return True
-
     except Exception as e:
         print(f"[SharePoint] Failed to post skillset for {filename}: {e}")
         return False
+
+
 def upload_resume_to_sharepoint(filename, file_bytes, skillset="", retries=2):
     last_error = None
-    for attempt in range(1, retries + 2):  # 1 initial + 2 retries = 3 total attempts
+    for attempt in range(1, retries + 2):
         try:
             content_b64 = base64.b64encode(file_bytes).decode("utf-8")
             payload = {
@@ -84,8 +90,8 @@ def upload_resume_to_sharepoint(filename, file_bytes, skillset="", retries=2):
                 "SkillSet":    skillset,
             }
             response = requests.post(
-                POWER_PLATFORM_POST_URL,
-                params=POWER_PLATFORM_POST_PARAMS,
+                _post_url(),
+                params=_post_params(),
                 json=payload,
                 timeout=60
             )
@@ -98,6 +104,7 @@ def upload_resume_to_sharepoint(filename, file_bytes, skillset="", retries=2):
 
     print(f"[SharePoint] All attempts failed for {filename}: {last_error}")
     return False
+
 
 def save_pdf_to_tempfile(pdf_bytes, filename):
     suffix = os.path.splitext(filename)[1] or ".pdf"

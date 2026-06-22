@@ -704,3 +704,491 @@ FIT_SUMMARY: With 3 years of experience as a Full Stack Developer, Rahul has bui
 LLM_SCORE: 90
 [2026-06-16 14:34:05] [INFO] resume_processing: [OLLAMA] Extracted — Name: Rahul Sharma | Email:  | Score: 90 | Skills: ['JavaScript', 'React.js', 'Node.js', 'Express.js', 'MongoDB', 'PostgreSQL', 'HTML5', 'CSS3', 'Git', 'Docker', 'AWS', 'Jenkins', 'REST APIs']
 [2026-06-16 14:34:05] [INFO] resume_processing: [LOG] DB log saved for: 20260616_141521_Resume1_Rahul_Sharma.pdf
+[2026-06-16 15:13:19] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 15:13:19] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 15:13:19] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 15:13:19] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 15:13:57] [INFO] resume_processing: [OLLAMA] Raw response received (402 chars)
+[2026-06-16 15:13:57] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Priya Verma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git
+FIT_SUMMARY: Experienced software engineer with a strong background in frontend and backend development using React and Node.js. Proficient in building reusable components and developing REST APIs. Strong understanding of Agile methodologies.
+LLM_SCORE: 85
+[2026-06-16 15:13:57] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 85 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git']
+[2026-06-16 15:13:57] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 15:28:08] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 15:28:08] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 15:28:08] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 15:28:08] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 15:28:47] [INFO] resume_processing: [OLLAMA] Raw response received (418 chars)
+[2026-06-16 15:28:47] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Priya Verma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git, Agile, REST APIs
+FIT_SUMMARY: Experienced software engineer with a strong background in frontend and backend development using React and Node.js. Proven skills in building reusable components and developing APIs. Strong understanding of agile methodologies.
+LLM_SCORE: 80
+[2026-06-16 15:28:47] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 80 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git', 'Agile', 'REST APIs']
+[2026-06-16 15:28:47] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 15:36:45] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 15:36:45] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 15:36:45] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 15:36:45] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 15:37:24] [INFO] resume_processing: [OLLAMA] Raw response received (415 chars)
+[2026-06-16 15:37:24] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Priya Verma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git
+FIT_SUMMARY: Experienced software engineer with a strong background in frontend and backend development using React and Node.js. Proficient in building reusable components and developing REST APIs. Proven ability to work efficiently in Agile environments.
+LLM_SCORE: 80
+[2026-06-16 15:37:24] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 80 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git']
+[2026-06-16 15:37:24] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 15:40:16] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 15:40:16] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 15:40:16] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 15:40:16] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 15:40:41] [INFO] resume_processing: [OLLAMA] Raw response received (408 chars)
+[2026-06-16 15:40:41] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information:
+
+NAME: Priya Verma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git, Agile, REST APIs
+FIT_SUMMARY: As a software engineer with experience in frontend and backend development, I bring expertise in building reusable React components, developing backend APIs using Express, and participating in Agile ceremonies.
+LLM_SCORE: 85
+[2026-06-16 15:40:41] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 85 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git', 'Agile', 'REST APIs']
+[2026-06-16 15:40:41] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 15:44:03] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 15:44:03] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 15:44:03] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 15:44:03] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 15:44:34] [INFO] resume_processing: [OLLAMA] Raw response received (543 chars)
+[2026-06-16 15:44:34] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Priya Verma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git, Agile, REST APIs
+FIT_SUMMARY: With experience in frontend and backend development using React and Node.js, I possess a strong foundation in building reusable components and developing backend APIs. My proficiency in Agile methodologies enables me to effectively participate in ceremonies. As a detail-oriented developer, I ensure my code is scalable, efficient, and well-documented.
+LLM_SCORE: 80
+[2026-06-16 15:44:34] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 80 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git', 'Agile', 'REST APIs']
+[2026-06-16 15:44:34] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 15:47:31] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 15:47:31] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 15:47:31] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 15:47:31] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 15:47:53] [INFO] resume_processing: [OLLAMA] Raw response received (315 chars)
+[2026-06-16 15:47:53] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+NAME: Priya Verma
+EMAIL: <blank>
+PHONE: <blank>
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git
+FIT_SUMMARY: Software Engineer with experience in frontend and backend development using React and Node.js. Strong skills in React, JavaScript, and related technologies. 
+LLM_SCORE: 95
+[2026-06-16 15:47:53] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 95 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git']
+[2026-06-16 15:47:53] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 15:52:31] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 15:52:31] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 15:52:31] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 15:52:31] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 15:52:55] [INFO] resume_processing: [OLLAMA] Raw response received (404 chars)
+[2026-06-16 15:52:55] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information:
+
+NAME: Priya Verma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git
+FIT_SUMMARY: Experienced software engineer with a strong foundation in frontend and backend development using React and Node.js. Proficient in building reusable components and developing APIs. Strong understanding of Agile methodologies.
+LLM_SCORE: 90
+[2026-06-16 15:52:55] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 90 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git']
+[2026-06-16 15:52:55] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 15:53:47] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 15:53:47] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 15:53:47] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 15:53:47] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 15:54:09] [INFO] resume_processing: [OLLAMA] Raw response received (335 chars)
+[2026-06-16 15:54:09] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Priya Verma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git, Agile, REST APIs
+FIT_SUMMARY: Frontend and backend development experience using React and Node.js, with expertise in building reusable components and developing backend APIs.
+LLM_SCORE: 80
+[2026-06-16 15:54:09] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 80 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git', 'Agile', 'REST APIs']
+[2026-06-16 15:54:09] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 15:54:49] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 15:54:49] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 15:54:49] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 15:54:49] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 15:55:21] [INFO] resume_processing: [OLLAMA] Raw response received (508 chars)
+[2026-06-16 15:55:21] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Priya Verma
+EMAIL: <blank> (no email address found in the resume text)
+PHONE: <blank> (phone number not provided)
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git, Agile, REST APIs
+FIT_SUMMARY: As a software engineer with experience in frontend and backend development, I have built reusable React components and developed backend APIs using Express. I am familiar with Agile ceremonies and have created responsive web pages.
+LLM_SCORE: 85
+[2026-06-16 15:55:21] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 85 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git', 'Agile', 'REST APIs']
+[2026-06-16 15:55:21] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 15:57:19] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 15:57:19] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 15:57:19] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 15:57:19] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 15:57:44] [INFO] resume_processing: [OLLAMA] Raw response received (402 chars)
+[2026-06-16 15:57:44] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Priya Verma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git, Agile, REST APIs
+FIT_SUMMARY: With experience in frontend and backend development using React and Node.js, I have developed reusable components and built scalable APIs. My expertise lies in integrating APIs and creating responsive web pages.
+LLM_SCORE: 85
+[2026-06-16 15:57:44] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 85 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git', 'Agile', 'REST APIs']
+[2026-06-16 15:57:44] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 16:00:37] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 16:00:37] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 16:00:37] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 16:00:37] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 16:01:00] [INFO] resume_processing: [OLLAMA] Raw response received (363 chars)
+[2026-06-16 16:01:00] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Priya Verma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git, Agile, REST APIs
+FIT_SUMMARY: Experienced software engineer with expertise in frontend and backend development using React and Node.js; strong understanding of Agile methodologies and proficient in Git.
+LLM_SCORE: 90
+[2026-06-16 16:01:00] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 90 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git', 'Agile', 'REST APIs']
+[2026-06-16 16:01:00] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 16:01:50] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 16:01:50] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 16:01:50] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 16:01:50] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 16:02:16] [INFO] resume_processing: [OLLAMA] Raw response received (360 chars)
+[2026-06-16 16:02:16] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Priya Verma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git, Agile, REST APIs
+FIT_SUMMARY: Software Engineer with experience in frontend and backend development using React and Node.js. Strong skills in building reusable components and developing backend APIs.
+LLM_SCORE: 80
+[2026-06-16 16:02:16] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 80 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git', 'Agile', 'REST APIs']
+[2026-06-16 16:02:16] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 16:03:08] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 16:03:08] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 16:03:08] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 16:03:08] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 16:03:27] [INFO] resume_processing: [OLLAMA] Raw response received (288 chars)
+[2026-06-16 16:03:27] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Priya Verma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git
+FIT_SUMMARY: Experienced software engineer with a strong foundation in frontend and backend development using React and Node.js.
+LLM_SCORE: 80
+[2026-06-16 16:03:27] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 80 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git']
+[2026-06-16 16:03:27] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 16:07:02] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 16:07:02] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 16:07:02] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 16:07:02] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 16:07:25] [INFO] resume_processing: [OLLAMA] Raw response received (384 chars)
+[2026-06-16 16:07:25] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Priya Verma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git
+FIT_SUMMARY: Experienced software engineer with skills in frontend and backend development using React and Node.js. Proficient in building reusable components and developing APIs. Strong understanding of Agile methodologies.
+LLM_SCORE: 85
+[2026-06-16 16:07:25] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 85 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git']
+[2026-06-16 16:07:25] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-16 16:10:19] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 538 characters
+[2026-06-16 16:10:19] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'node.js', 'express', 'react', 'git']
+[2026-06-16 16:10:19] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume2_Priya_Verma.pdf | Uploaded by: mohan@synergy.com
+[2026-06-16 16:10:19] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-16 16:10:43] [INFO] resume_processing: [OLLAMA] Raw response received (340 chars)
+[2026-06-16 16:10:43] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+NAME: Priya Verma
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2.5
+SKILLS: React, JavaScript, HTML, CSS, Node.js, Express, MySQL, Git
+FIT_SUMMARY: Software Engineer with frontend and backend development experience using React and Node.js. Proficient in building reusable components, developing REST APIs, and participating in Agile ceremonies.
+LLM_SCORE: 80
+[2026-06-16 16:10:43] [INFO] resume_processing: [OLLAMA] Extracted — Name: Priya Verma | Email:  | Score: 80 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Node.js', 'Express', 'MySQL', 'Git']
+[2026-06-16 16:10:43] [INFO] resume_processing: [LOG] DB log saved for: Resume2_Priya_Verma.pdf
+[2026-06-22 10:04:19] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 4253 characters
+[2026-06-22 10:04:19] [INFO] resume_processing: [REGEX] Extracted — Name: Gummadavelly Naga Laxmi | Email: gummadavelly.nagalaxmi@gmail.com | Skills: ['javascript', 'react', 'git']
+[2026-06-22 10:04:19] [INFO] resume_processing: [OLLAMA] Starting extraction for: NagaLaxmi_Resume_Final.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 10:04:19] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Gummadavelly Naga Laxmi | Email: gummadavelly.nagalaxmi@gmail.com
+[2026-06-22 10:05:56] [INFO] resume_processing: [OLLAMA] Raw response received (720 chars)
+[2026-06-22 10:05:56] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Gummadavelly Naga Laxmi
+EMAIL: gummadavelly.nagalaxmi@gmail.com
+PHONE:
+EXPERIENCE: 1
+SKILLS: Python, Java, JavaScript, HTML, CSS, Django REST Framework, Flask, React.js, LangChain, TensorFlow, Ollama, Large Language Models (LLM), Prompt Engineering, NLP, Computer Vision, Deep Learning, CNN, REST API Design, JWT Authentication, RBAC, Swagger, OpenAPI, Streaming Responses, CORS, MySQL, MongoDB, Git, GitHub, VS Code, Postman
+FIT_SUMMARY: Experienced AI/ML intern with a strong background in building AI-driven web applications and developing projects using Python, Django REST Framework, and React.js. Possesses expertise in prompt engineering, NLP, and computer vision.
+LLM_SCORE: 92
+[2026-06-22 10:05:56] [INFO] resume_processing: [OLLAMA] Extracted — Name: Gummadavelly Naga Laxmi | Email: gummadavelly.nagalaxmi@gmail.com | Score: 92 | Skills: ['Python', 'Java', 'JavaScript', 'HTML', 'CSS', 'Django REST Framework', 'Flask', 'React.js', 'LangChain', 'TensorFlow', 'Ollama', 'Large Language Models (LLM)', 'Prompt Engineering', 'NLP', 'Computer Vision', 'Deep Learning', 'CNN', 'REST API Design', 'JWT Authentication', 'RBAC', 'Swagger', 'OpenAPI', 'Streaming Responses', 'CORS', 'MySQL', 'MongoDB', 'Git', 'GitHub', 'VS Code', 'Postman']
+[2026-06-22 10:05:56] [INFO] resume_processing: [LOG] DB log saved for: NagaLaxmi_Resume_Final.pdf
+[2026-06-22 10:06:02] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 3483 characters
+[2026-06-22 10:06:02] [INFO] resume_processing: [REGEX] Extracted — Name: Sample Data File | Email:  | Skills: []
+[2026-06-22 10:06:02] [INFO] resume_processing: [OLLAMA] Starting extraction for: c4611_sample_explain.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 10:06:02] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Sample Data File | Email: 
+[2026-06-22 10:06:37] [INFO] resume_processing: [OLLAMA] Raw response received (151 chars)
+[2026-06-22 10:06:37] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information:
+
+NAME: Not provided
+EMAIL:
+PHONE:
+EXPERIENCE: 
+SKILLS: 
+FIT_SUMMARY: No relevant information provided.
+LLM_SCORE: 20
+[2026-06-22 10:06:37] [INFO] resume_processing: [OLLAMA] Extracted — Name: Not provided | Email:  | Score: 20 | Skills: ['FIT_SUMMARY: No relevant information provided.']
+[2026-06-22 10:06:37] [INFO] resume_processing: [LOG] DB log saved for: c4611_sample_explain.pdf
+[2026-06-22 10:06:42] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 379 characters
+[2026-06-22 10:06:42] [INFO] resume_processing: [REGEX] Extracted — Name: Sales Analytics Dashboard | Email:  | Skills: []
+[2026-06-22 10:06:42] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume5_Neha_Gupta.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 10:06:42] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Sales Analytics Dashboard | Email: 
+[2026-06-22 10:07:01] [INFO] resume_processing: [OLLAMA] Raw response received (218 chars)
+[2026-06-22 10:07:01] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Neha Gupta
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2
+SKILLS: Python, SQL, Power BI, Excel, Tableau
+FIT_SUMMARY: Data Analyst with experience in SQL, Python, Power BI, and reporting.
+LLM_SCORE: 80
+[2026-06-22 10:07:01] [INFO] resume_processing: [OLLAMA] Extracted — Name: Neha Gupta | Email:  | Score: 80 | Skills: ['Python', 'SQL', 'Power BI', 'Excel', 'Tableau']
+[2026-06-22 10:07:01] [INFO] resume_processing: [LOG] DB log saved for: Resume5_Neha_Gupta.pdf
+[2026-06-22 10:07:03] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 385 characters
+[2026-06-22 10:07:03] [INFO] resume_processing: [REGEX] Extracted — Name: Inventory Management System | Email:  | Skills: ['javascript', 'git']
+[2026-06-22 10:07:03] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume4_Sneha_Patel.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 10:07:03] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Inventory Management System | Email: 
+[2026-06-22 10:07:28] [INFO] resume_processing: [OLLAMA] Raw response received (360 chars)
+[2026-06-22 10:07:28] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information:
+
+NAME: Sneha Patel
+EMAIL: <blank> (no explicit email address provided)
+PHONE: <blank> (no phone number mentioned)
+EXPERIENCE: 2
+SKILLS: Java, Spring Boot, HTML, CSS, JavaScript, Git
+FIT_SUMMARY: Software Developer with experience in Java and frontend development, participated in sprint planning and bug fixing.
+LLM_SCORE: 60
+[2026-06-22 10:07:28] [INFO] resume_processing: [OLLAMA] Extracted — Name: Sneha Patel | Email:  | Score: 60 | Skills: ['Java', 'Spring Boot', 'HTML', 'CSS', 'JavaScript', 'Git']
+[2026-06-22 10:07:28] [INFO] resume_processing: [LOG] DB log saved for: Resume4_Sneha_Patel.pdf
+[2026-06-22 10:07:31] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 416 characters
+[2026-06-22 10:07:31] [INFO] resume_processing: [REGEX] Extracted — Name: Online Learning Platform | Email:  | Skills: ['javascript', 'react', 'git']
+[2026-06-22 10:07:31] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume3_Arjun_Kumar.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 10:07:31] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Online Learning Platform | Email: 
+[2026-06-22 10:07:57] [INFO] resume_processing: [OLLAMA] Raw response received (372 chars)
+[2026-06-22 10:07:57] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Arjun Kumar
+EMAIL: <blank> (no email address provided)
+PHONE: <blank> (no phone number provided)
+EXPERIENCE: 3
+SKILLS: React, JavaScript, HTML, CSS, Git
+FIT_SUMMARY: Frontend Developer with experience building responsive web interfaces using React and JavaScript. Strong understanding of UI development and API integration.
+LLM_SCORE: 80
+[2026-06-22 10:07:57] [INFO] resume_processing: [OLLAMA] Extracted — Name: Arjun Kumar | Email:  | Score: 80 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Git']
+[2026-06-22 10:07:57] [INFO] resume_processing: [LOG] DB log saved for: Resume3_Arjun_Kumar.pdf
+[2026-06-22 11:30:14] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 416 characters
+[2026-06-22 11:30:14] [INFO] resume_processing: [PII] Extracted — Name: 'Online Learning Platform' | Email: '' | Phone: '' | LinkedIn: False | GitHub: False
+[2026-06-22 11:30:19] [INFO] resume_processing: [REGEX] Extracted — Name: Online Learning Platform | Email:  | Skills: ['javascript', 'react']
+[2026-06-22 11:30:19] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume3_Arjun_Kumar.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 11:30:19] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Online Learning Platform | Email: 
+[2026-06-22 11:31:01] [INFO] resume_processing: [OLLAMA] Raw response received (411 chars)
+[2026-06-22 11:31:01] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: Arjun Kumar
+EMAIL: <blank> (no email address provided)
+PHONE: <blank> (no phone number mentioned)
+EXPERIENCE: 3
+SKILLS: React, JavaScript, HTML, CSS, Git
+FIT_SUMMARY: Frontend Developer with 3 years of experience building responsive web interfaces using React and JavaScript. Strong skills in UI development, API integration, and collaboration with UX designers.
+LLM_SCORE: 80
+[2026-06-22 11:31:01] [INFO] resume_processing: [OLLAMA] Extracted — Name: Arjun Kumar | Email:  | Score: 80 | Skills: ['React', 'JavaScript', 'HTML', 'CSS', 'Git']
+[2026-06-22 11:31:01] [INFO] resume_processing: [LOG] DB log saved for: Resume3_Arjun_Kumar.pdf
+[2026-06-22 11:38:02] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 4253 characters
+[2026-06-22 11:38:02] [INFO] resume_processing: [PII] Extracted — Name: 'Gummadavelly Naga Laxmi' | Email: 'gummadavelly.nagalaxmi@gmail.com' | Phone: '+91-7989044683' | LinkedIn: True | GitHub: True
+[2026-06-22 11:38:04] [INFO] resume_processing: [REGEX] Extracted — Name:  | Email:  | Skills: ['javascript', 'react']
+[2026-06-22 11:38:04] [INFO] resume_processing: [OLLAMA] Starting extraction for: NagaLaxmi_Resume_Final.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 11:38:04] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name:  | Email: 
+[2026-06-22 11:39:37] [INFO] resume_processing: [OLLAMA] Raw response received (739 chars)
+[2026-06-22 11:39:37] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information:
+
+NAME: Gummadavelly [REDACTED_NAME]
+
+EMAIL: [REDACTED_EMAIL] (only valid email addresses with @ symbol)
+
+PHONE: [REDACTED_PHONE] (digits only, or blank)
+
+EXPERIENCE: 1 (only one year of experience is explicitly mentioned)
+
+SKILLS: Python, JavaScript, HTML, CSS, Django REST Framework, Flask, React.js, LangChain, TensorFlow, Ollama, LLM, Prompt Engineering, NLP, Computer Vision, CNN, REST API Design, JWT Authentication, RBAC, OpenAPI, CORS, MySQL, MongoDB, Git, GitHub, VS Code
+
+FIT_SUMMARY: Not provided (as this field is not explicitly filled in the resume)
+
+LLM_SCORE: Not applicable (no job context provided)
+
+Note that I've left the LLM_SCORE and FIT_SUMMARY fields blank as per your instructions.
+[2026-06-22 11:39:37] [INFO] resume_processing: [OLLAMA] Extracted — Name: Gummadavelly [REDACTED_NAME] | Email:  | Score: 0 | Skills: ['Python', 'JavaScript', 'HTML', 'CSS', 'Django REST Framework', 'Flask', 'React.js', 'LangChain', 'TensorFlow', 'Ollama', 'LLM', 'Prompt Engineering', 'NLP', 'Computer Vision', 'CNN', 'REST API Design', 'JWT Authentication', 'RBAC', 'OpenAPI', 'CORS', 'MySQL', 'MongoDB', 'Git', 'GitHub', 'VS Code']
+[2026-06-22 11:39:37] [INFO] resume_processing: [LOG] DB log saved for: NagaLaxmi_Resume_Final.pdf
+[2026-06-22 12:17:38] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 379 characters
+[2026-06-22 12:17:38] [INFO] resume_processing: [PII] Extracted — Name: 'Sales Analytics Dashboard' | Email: '' | Phone: '' | LinkedIn: False | GitHub: False
+[2026-06-22 12:17:41] [INFO] resume_processing: [REGEX] Extracted — Name: Sales Analytics Dashboard | Email:  | Skills: []
+[2026-06-22 12:17:41] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume5_Neha_Gupta.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 12:17:41] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Sales Analytics Dashboard | Email: 
+[2026-06-22 12:18:18] [INFO] resume_processing: [OLLAMA] Raw response received (327 chars)
+[2026-06-22 12:18:18] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information in the exact format:
+
+NAME: REACTED_NAME
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2
+SKILLS: Python, SQL, Power BI, Excel, Tableau
+FIT_SUMMARY: Experienced data analyst with expertise in reporting and analytics. Strong skills in creating dashboards and reports using Python, SQL, and Power BI.
+LLM_SCORE: 80
+[2026-06-22 12:18:18] [INFO] resume_processing: [OLLAMA] Extracted — Name: REACTED_NAME | Email:  | Score: 80 | Skills: ['Python', 'SQL', 'Power BI', 'Excel', 'Tableau']
+[2026-06-22 12:18:18] [INFO] resume_processing: [LOG] DB log saved for: Resume5_Neha_Gupta.pdf
+[2026-06-22 12:28:18] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 379 characters
+[2026-06-22 12:28:18] [INFO] resume_processing: [PII] Extracted — Name: 'Sales Analytics Dashboard' | Email: '' | Phone: '' | LinkedIn: False | GitHub: False
+[2026-06-22 12:28:20] [INFO] resume_processing: [REGEX] Extracted — Name: Sales Analytics Dashboard | Email:  | Skills: []
+[2026-06-22 12:28:20] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume5_Neha_Gupta.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 12:28:20] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Sales Analytics Dashboard | Email: 
+[2026-06-22 12:28:56] [INFO] resume_processing: [OLLAMA] Raw response received (310 chars)
+[2026-06-22 12:28:56] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information:
+
+NAME: REACTED_NAME
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2
+SKILLS: Python, SQL, Power BI, Excel, Tableau
+FIT_SUMMARY: Data Analyst with experience in SQL, Python, Power BI, and reporting. Strong analytical skills with expertise in dashboard building and report creation.
+LLM_SCORE: 80
+[2026-06-22 12:28:56] [INFO] resume_processing: [OLLAMA] Extracted — Name: REACTED_NAME | Email:  | Score: 80 | Skills: ['Python', 'SQL', 'Power BI', 'Excel', 'Tableau']
+[2026-06-22 12:28:56] [INFO] resume_processing: [LOG] DB log saved for: Resume5_Neha_Gupta.pdf
+[2026-06-22 12:31:25] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 379 characters
+[2026-06-22 12:31:25] [INFO] resume_processing: [PII] Extracted — Name: 'Sales Analytics Dashboard' | Email: '' | Phone: '' | LinkedIn: False | GitHub: False
+[2026-06-22 12:31:27] [INFO] resume_processing: [REGEX] Extracted — Name: Sales Analytics Dashboard | Email:  | Skills: []
+[2026-06-22 12:31:27] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume5_Neha_Gupta.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 12:31:27] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Sales Analytics Dashboard | Email: 
+[2026-06-22 12:31:47] [INFO] resume_processing: [OLLAMA] Raw response received (265 chars)
+[2026-06-22 12:31:47] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data in the exact format:
+
+NAME: [REDACTED_NAME] Analyst
+EMAIL: (blank)
+PHONE: (blank)
+EXPERIENCE: 2
+SKILLS: Python, SQL, Power BI, Excel, Tableau
+FIT_SUMMARY: Data Analyst with experience in SQL, Python, Power BI, and reporting.
+LLM_SCORE: 80
+[2026-06-22 12:31:47] [INFO] resume_processing: [OLLAMA] Extracted — Name:  | Email:  | Score: 80 | Skills: ['Python', 'SQL', 'Power BI', 'Excel', 'Tableau']
+[2026-06-22 12:31:47] [INFO] resume_processing: [LOG] DB log saved for: Resume5_Neha_Gupta.pdf
+[2026-06-22 12:38:14] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 379 characters
+[2026-06-22 12:38:14] [INFO] resume_processing: [PII] Extracted — Name: 'Neha Gupta' | Email: '' | Phone: '' | LinkedIn: False | GitHub: False
+[2026-06-22 12:38:16] [INFO] resume_processing: [REGEX] Extracted — Name: Sales Analytics Dashboard | Email:  | Skills: []
+[2026-06-22 12:38:16] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume5_Neha_Gupta.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 12:38:16] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Sales Analytics Dashboard | Email: 
+[2026-06-22 12:38:53] [INFO] resume_processing: [OLLAMA] Raw response received (297 chars)
+[2026-06-22 12:38:53] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data in the exact format:
+
+NAME: REACTED_NAME
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2
+SKILLS: Python, SQL, Power BI, Excel, Tableau
+FIT_SUMMARY: Data Analyst with experience in SQL, Python, Power BI, and reporting. Strong skills in dashboard building and report creation.
+LLM_SCORE: 80
+[2026-06-22 12:38:53] [INFO] resume_processing: [OLLAMA] Extracted — Name: REACTED_NAME | Email:  | Score: 80 | Skills: ['Python', 'SQL', 'Power BI', 'Excel', 'Tableau']
+[2026-06-22 12:38:53] [INFO] resume_processing: [LOG] DB log saved for: Resume5_Neha_Gupta.pdf
+[2026-06-22 13:47:17] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 379 characters
+[2026-06-22 13:47:17] [INFO] resume_processing: [PII] Extracted — Name: 'Neha Gupta' | Email: '' | Phone: '' | LinkedIn: False | GitHub: False
+[2026-06-22 13:47:21] [INFO] resume_processing: [REGEX] Extracted — Name: Sales Analytics Dashboard | Email:  | Skills: []
+[2026-06-22 13:47:21] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume5_Neha_Gupta.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 13:47:21] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Sales Analytics Dashboard | Email: 
+[2026-06-22 13:47:58] [INFO] resume_processing: [OLLAMA] Raw response received (289 chars)
+[2026-06-22 13:47:58] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted data:
+
+NAME: REACTED_NAME
+EMAIL:
+PHONE:
+EXPERIENCE: 2
+SKILLS: Python, SQL, Power BI, Excel, Tableau
+FIT_SUMMARY: Data Analyst with experience in SQL, Python, Power BI, and reporting. Proficient in dashboard building, report creation, and ETL operations.
+LLM_SCORE: 60
+[2026-06-22 13:47:58] [INFO] resume_processing: [OLLAMA] Extracted — Name:  | Email:  | Score: 60 | Skills: ['Python', 'SQL', 'Power BI', 'Excel', 'Tableau']
+[2026-06-22 13:47:58] [INFO] resume_processing: [LOG] DB log saved for: Resume5_Neha_Gupta.pdf
+[2026-06-22 13:51:24] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 379 characters
+[2026-06-22 13:51:24] [INFO] resume_processing: [PII] Extracted — Name: 'Neha Gupta' | Email: '' | Phone: '' | LinkedIn: False | GitHub: False
+[2026-06-22 13:51:25] [INFO] resume_processing: [REGEX] Extracted — Name: Sales Analytics Dashboard | Email:  | Skills: []
+[2026-06-22 13:51:25] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume5_Neha_Gupta.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 13:51:25] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Sales Analytics Dashboard | Email: 
+[2026-06-22 13:51:45] [INFO] resume_processing: [OLLAMA] Raw response received (288 chars)
+[2026-06-22 13:51:45] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information in the exact format:
+
+NAME: REDACTED_NAME
+EMAIL: (blank)
+PHONE: (blank)
+EXPERIENCE: 2
+SKILLS: Python, SQL, Power BI, Excel, Tableau
+FIT_SUMMARY: Data Analyst with experience in SQL, Python, Power BI, and reporting. Strong analytical skills.
+LLM_SCORE: 60
+[2026-06-22 13:51:45] [INFO] resume_processing: [OLLAMA] Extracted — Name:  | Email:  | Score: 60 | Skills: ['Python', 'SQL', 'Power BI', 'Excel', 'Tableau']
+[2026-06-22 13:51:45] [INFO] resume_processing: [LOG] DB log saved for: Resume5_Neha_Gupta.pdf

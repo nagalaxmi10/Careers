@@ -194,9 +194,10 @@ def _regex_fallback(resume_text, required_skills):
     name = ""
     for line in resume_text.splitlines():
         line = line.strip()
-        if re.match(r"^[A-Z][a-z]+(?:\s[A-Z][a-z]+){1,3}$", line):
-            if _is_valid_name(line):
-                name = line
+        clean = line.split(" - ")[0].strip()
+        if re.match(r"^[A-Z][a-z]+(?:\s[A-Z][a-z]+){1,3}$", clean):
+            if _is_valid_name(clean):
+                name = clean
                 break
 
     email_match = re.search(r"[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}", resume_text)
@@ -246,11 +247,39 @@ def extract_with_ollama(resume_text, required_skills, job_context="", past_match
 STRICT RULES:
 1. Extract ONLY what is explicitly written in the resume text.
 2. Do NOT guess, infer, or hallucinate any information.
-3. For SKILLS: extract ONLY technical skills visible in the resume (programming languages, frameworks, tools).
+3. For SKILLS extract ALL relevant professional skills visible in the resume including:
+- Programming languages
+- Frameworks
+- Libraries
+- Databases
+- Cloud platforms
+- DevOps tools
+- Testing tools
+- APIs
+- Methodologies (Agile, Scrum, Kanban)
+- CI/CD tools
 4. For EMAIL: extract ONLY valid email addresses containing @. LinkedIn/GitHub URLs are NOT emails.
 5. If a field is missing, leave it blank.
 6. EXPERIENCE: extract total years as a plain number only (e.g. 7, not 7+).
-7. LLM_SCORE: give an honest integer 0-100 based on how well skills match a frontend developer role.
+7. LLM_SCORE:
+Score the candidate against the JOB CONTEXT.
+
+Consider:
+- Required skills
+- Years of experience
+- Responsibilities
+- Qualifications
+- Relevant projects
+- Team collaboration
+- CI/CD and deployment experience
+
+100 = near perfect match
+80 = strong shortlist
+60 = partial match
+40 = weak match
+20 = poor match
+
+Return only an integer.
 8. FIT_SUMMARY: always provide 2-3 sentences — never leave blank.
 
 Respond in this EXACT format with no extra text:
@@ -311,6 +340,8 @@ LLM_SCORE: <integer 0-100>
         llm_score = min(int(llm_score_match.group(1)), 100) if llm_score_match else 0
 
         raw_name = name.group(1).strip() if name else ""
+        if any(x in raw_name.upper() for x in ["REDACTED", "REACTED", "[REDACT"]):
+            raw_name = ""
         valid_name = raw_name if _is_valid_name(raw_name) else ""
 
         # ✅ FIX 1: Reject non-email values (LinkedIn URLs, etc.)
