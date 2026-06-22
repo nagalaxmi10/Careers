@@ -1192,3 +1192,22 @@ FIT_SUMMARY: Data Analyst with experience in SQL, Python, Power BI, and reportin
 LLM_SCORE: 60
 [2026-06-22 13:51:45] [INFO] resume_processing: [OLLAMA] Extracted — Name:  | Email:  | Score: 60 | Skills: ['Python', 'SQL', 'Power BI', 'Excel', 'Tableau']
 [2026-06-22 13:51:45] [INFO] resume_processing: [LOG] DB log saved for: Resume5_Neha_Gupta.pdf
+[2026-06-22 13:57:15] [INFO] resume_processing: [EXTRACTOR] PyPDF2 extracted 379 characters
+[2026-06-22 13:57:15] [INFO] resume_processing: [PII] Extracted — Name: 'Neha Gupta' | Email: '' | Phone: '' | LinkedIn: False | GitHub: False
+[2026-06-22 13:57:17] [INFO] resume_processing: [PII] Extracted — Name: 'Neha Gupta' | Email: '' | Phone: '' | LinkedIn: False | GitHub: False
+[2026-06-22 13:57:17] [INFO] resume_processing: [REGEX] Extracted — Name: Sales Analytics Dashboard | Email:  | Skills: []
+[2026-06-22 13:57:17] [INFO] resume_processing: [OLLAMA] Starting extraction for: Resume5_Neha_Gupta.pdf | Uploaded by: mohan@synergy.com
+[2026-06-22 13:57:17] [INFO] resume_processing: [OLLAMA] Regex pre-extract — Name: Sales Analytics Dashboard | Email: 
+[2026-06-22 13:57:53] [INFO] resume_processing: [OLLAMA] Raw response received (304 chars)
+[2026-06-22 13:57:53] [DEBUG] resume_processing: [OLLAMA] RAW OUTPUT:
+Here is the extracted information in the exact format:
+
+NAME: REDACTED_NAME
+EMAIL: 
+PHONE: 
+EXPERIENCE: 2
+SKILLS: Python, SQL, Power BI, Excel, Tableau
+FIT_SUMMARY: Data Analyst with experience in SQL, Python, Power BI, and reporting. Proficient in building dashboards and creating reports.
+LLM_SCORE: 80
+[2026-06-22 13:57:53] [INFO] resume_processing: [OLLAMA] Extracted — Name:  | Email:  | Score: 80 | Skills: ['Python', 'SQL', 'Power BI', 'Excel', 'Tableau']
+[2026-06-22 13:57:53] [INFO] resume_processing: [LOG] DB log saved for: Resume5_Neha_Gupta.pdf
