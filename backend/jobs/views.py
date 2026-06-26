@@ -47,9 +47,35 @@ class JobRequestViewSet(ModelViewSet):
             raise PermissionDenied("Permission denied.")
 
     def perform_destroy(self, instance):
-        if self.request.user.role != "ADMIN":
-            raise PermissionDenied("Only admins can delete job requests.")
-        instance.delete()
+        user = self.request.user
+
+        if user.role == "ADMIN":
+            instance.delete()
+            return
+
+        if user.role == "EMPLOYEE":
+            if instance.employee != user:
+                raise PermissionDenied("You can only delete your own requests.")
+            if instance.status != "PENDING":
+                raise PermissionDenied("You can only delete requests that are still pending approval.")
+            instance.delete()
+            return
+
+        raise PermissionDenied("Permission denied.")
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def generate_jd(request):
+    """Use Ollama to generate Job Description from a title."""
+    title = request.data.get("title", "")
+    if not title:
+        return Response({"error": "Title is required"}, status=400)
+
+    if request.user.role != "EMPLOYEE":
+        return Response({"error": "Only employees can generate JDs"}, status=403)
+
+    raise PermissionDenied("Permission denied.")
 
 
 @api_view(["POST"])

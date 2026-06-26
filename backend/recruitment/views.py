@@ -7,21 +7,18 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from rest_framework.decorators import api_view, permission_classes
 from django.shortcuts import redirect
-from rest_framework.views import APIView
-from rest_framework import status as drf_status
-from .services.sharepoint_service import (
-    get_all_filenames, download_resume,
-    post_screening_result, save_pdf_to_tempfile
-)
 import threading
 from pathlib import Path
 import os
 import requests
 from io import BytesIO
-from .models import CandidateResume, ShortlistedCandidate, Interview, EmailLog
+from collections import Counter
+
+
+from .models import CandidateResume, ResumeScreening, Interview, EmailLog
 from .serializers import (
     CandidateResumeSerializer,
-    ShortlistedCandidateSerializer,
+    ResumeScreeningSerializer,
     InterviewSerializer,
     EmailLogSerializer
 )
@@ -30,6 +27,8 @@ from .services.pii_redactor import extract_pii, redact_pii
 from .services.resume_matcher import match_resume
 from .services.resume_extractor import extract_text_from_file, extract_with_ollama, _is_valid_name
 from .email_service import send_interview_email
+
+SHORTLIST_THRESHOLD = 70.0  # default threshold; pool screening lets recruiter override per-run
 
 
 def _to_list(value):
@@ -59,11 +58,8 @@ def _compute_score(keyword_score, llm_score, experience_score=100.0):
       50% LLM relevance
       30% keyword match
       20% experience match
-
-    If LLM didn't score (0), fall back to keyword + experience only.
     """
     if llm_score == 0:
-        # No LLM score — trust keyword score, factor in experience lightly
         return round((0.8 * keyword_score) + (0.2 * experience_score), 2)
     if keyword_score == 0:
         return min(float(llm_score), 40.0)
@@ -79,19 +75,26 @@ def _compute_score(keyword_score, llm_score, experience_score=100.0):
         )
 
 
-def _process_resume(resume, resume_text, job_request, filename="", uploaded_by="", result=None):
-    """Shared logic: score and save a CandidateResume instance."""
+def _process_resume(resume, resume_text, job_request, filename="", uploaded_by="", result=None, threshold=SHORTLIST_THRESHOLD):
     required_skills = job_request.skills_list() or []
 
-    # ✅ NEW — extract PII from the ORIGINAL text, independent of the LLM
     pii = extract_pii(resume_text)
-
-    # ✅ NEW — redact PII before anything reaches Ollama
     redacted_text = redact_pii(resume_text)
+
+    # ── Quick pre-filter — skip Ollama if no skill overlap at all ──
+    if result is None:
+        required_lower = [s.lower() for s in required_skills]
+        resume_lower = resume_text.lower()
+        has_any_skill = any(skill in resume_lower for skill in required_lower)
+        if not has_any_skill:
+            result = {
+                "name": "", "email": "", "phone": "", "experience": 0.0,
+                "skills": [], "score": 0.0, "fit_summary": "No relevant skills found.", "llm_score": 0,
+            }
 
     if result is None:
         result = extract_with_ollama(
-            redacted_text, required_skills,            # ← was resume_text, now redacted_text
+            redacted_text, required_skills,
             job_context="", past_matches="",
             filename=filename, uploaded_by=str(uploaded_by)
         )
@@ -102,11 +105,12 @@ def _process_resume(resume, resume_text, job_request, filename="", uploaded_by="
             "skills": [], "score": 0.0, "fit_summary": "", "llm_score": 0,
         }
 
+
     extracted_skills = _to_list(result["skills"])
     print(f"[DEBUG] _process_resume → extracted_skills: {extracted_skills}")
 
-    keyword_score    = match_resume(extracted_skills, required_skills)
-    llm_score        = result.get("llm_score", 0)
+    keyword_score = match_resume(extracted_skills, required_skills)
+    llm_score     = result.get("llm_score", 0)
 
     try:
         experience = float(result.get("experience", 0.0) or 0.0)
@@ -124,7 +128,6 @@ def _process_resume(resume, resume_text, job_request, filename="", uploaded_by="
     print(f"Experience Score: {exp_score}")
     print(f"Final Score:      {computed_score}")
 
-    # ✅ CHANGED — name now comes from extract_pii, not the LLM result/fallback chain
     extracted_name = pii["name"] if _is_valid_name(pii["name"]) else ""
     if not extracted_name:
         if pii["email"]:
@@ -134,60 +137,65 @@ def _process_resume(resume, resume_text, job_request, filename="", uploaded_by="
         else:
             extracted_name = ""
 
-    resume.resume_text      = resume_text          # keep original text for HR to read
-    resume.candidate_name   = extracted_name        # ✅ from extract_pii
-    resume.email            = pii["email"]          # ✅ from extract_pii
-    resume.phone            = pii["phone"]          # ✅ from extract_pii
-    resume.linkedin_url     = pii["linkedin_url"]   # ✅ NEW field, from extract_pii
-    resume.github_url       = pii["github_url"]     # ✅ NEW field, from extract_pii
-    resume.experience       = experience
-    resume.skills           = extracted_skills
-    resume.match_percentage = computed_score
-    resume.is_shortlisted   = computed_score >= 65.0
-    resume.fit_summary      = result.get("fit_summary", "")
+    # Pool-level fields — belong to the resume itself, not any one screening
+    resume.resume_text    = resume_text
+    resume.candidate_name = extracted_name
+    resume.email          = pii["email"]
+    resume.phone          = pii["phone"]
+    resume.linkedin_url   = pii["linkedin_url"]
+    resume.github_url     = pii["github_url"]
+    resume.experience     = experience
+    resume.skills         = extracted_skills
     resume.save()
 
-    if resume.is_shortlisted:
-        ShortlistedCandidate.objects.get_or_create(candidate=resume)
+    # Screening outcome — scoped to (resume, job_request)
+    screening, _ = ResumeScreening.objects.update_or_create(
+        resume=resume,
+        job_request=job_request,
+        defaults={
+            "llm_score":      computed_score,
+            "threshold_used": threshold,
+            "is_shortlisted": computed_score >= threshold,
+            "fit_summary":    result.get("fit_summary", ""),
+            "matched_skills": extracted_skills,
+        }
+    )
 
-    return computed_score
+    return screening
 
 
 class CandidateResumeViewSet(ModelViewSet):
+    """
+    The resume POOL. No job filtering by default — a resume exists
+    independent of any job. Use ResumeScreeningViewSet to see/filter
+    by job-specific results.
+    """
     serializer_class = CandidateResumeSerializer
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     def get_queryset(self):
         user = self.request.user
-        queryset = CandidateResume.objects.all()
-
-        job_request_id = self.request.query_params.get('job_request')
-        if job_request_id:
-            queryset = queryset.filter(job_request_id=job_request_id)
-
         if user.role in ["ADMIN", "RECRUITER"]:
-            return queryset
+            return CandidateResume.objects.all()
         if user.role in ["HR", "JUNIOR_HR"]:
-            return queryset.filter(is_shortlisted=True)
+            # HR only sees resumes that are shortlisted for AT LEAST one job
+            return CandidateResume.objects.filter(screenings__is_shortlisted=True).distinct()
         return CandidateResume.objects.none()
 
     def perform_create(self, serializer):
-        """Handles Single URL Submission from the frontend."""
+        """
+        Single URL submission — adds a resume to the POOL only.
+        No job, no scoring at upload time. Use the screening endpoint
+        to score pool resumes against a job afterward.
+        """
         user = self.request.user
         if user.role != "RECRUITER":
             raise PermissionDenied("Only recruiters can add resumes.")
 
-        job_request_id = self.request.data.get("job_request")
-        resume_url     = self.request.data.get("resume_url")
-
+        resume_url = self.request.data.get("resume_url")
         if not resume_url:
             raise PermissionDenied("Resume URL is required.")
-
-        try:
-            job_request = JobRequest.objects.get(id=job_request_id, status="APPROVED")
-        except JobRequest.DoesNotExist:
-            raise PermissionDenied("Approved job request not found.")
 
         if "drive.google.com" in resume_url and "/uc?export=download" not in resume_url:
             try:
@@ -201,88 +209,41 @@ class CandidateResumeViewSet(ModelViewSet):
             response.raise_for_status()
             in_memory_pdf = BytesIO(response.content)
         except requests.RequestException:
-            resume = serializer.save(uploaded_by=user, job_request=job_request, resume_url=resume_url)
+            resume = serializer.save(uploaded_by=user, resume_url=resume_url)
             resume.candidate_name = "Failed to fetch URL"
             resume.save()
             return
 
-        resume      = serializer.save(uploaded_by=user, job_request=job_request, resume_url=resume_url)
+        resume = serializer.save(uploaded_by=user, resume_url=resume_url)
         resume_text = extract_text_from_file(in_memory_pdf)
 
         if not resume_text or len(resume_text.strip()) < 30:
             resume.candidate_name = "Unreadable Resume / Empty PDF"
-            resume.resume_text    = resume_text or ""
+            resume.resume_text = resume_text or ""
             resume.save()
             return
 
-        from .services.rag_store import retrieve_job_context, retrieve_past_matches, index_past_match, index_job_request
-        from .services.pii_redactor import extract_pii, redact_pii   # ✅ NEW
-
-        # ✅ NEW — extract PII from original text, redact before anything else touches it
         pii = extract_pii(resume_text)
         redacted_text = redact_pii(resume_text)
 
-        job_context  = retrieve_job_context(job_request, redacted_text)        # ← was resume_text
-        past_matches = retrieve_past_matches(redacted_text, job_request.title) # ← was resume_text
-
-        required_skills = job_request.skills_list() or []
-        result = extract_with_ollama(
-            redacted_text, required_skills, job_context, past_matches,        # ← was resume_text
-            filename=resume_url, uploaded_by=str(user)
-        )
-
-        if not result:
-            result = {
-                "name": "", "email": "", "phone": "", "experience": 0.0,
-                "skills": [], "score": 0.0, "fit_summary": "", "llm_score": 0,
-            }
-
-        extracted_skills = _to_list(result["skills"])
-        keyword_score    = match_resume(extracted_skills, required_skills)
-        llm_score        = result.get("llm_score", 0)
-
-        try:
-            experience = float(result.get("experience", 0.0) or 0.0)
-            if experience < 0:
-                experience = 0.0
-        except (TypeError, ValueError):
-            experience = 0.0
-
-        exp_score      = _experience_score(experience, getattr(job_request, "experience_required", 0))
-        computed_score = _compute_score(keyword_score, llm_score, exp_score)
-
-        print(f"=== FINAL SCORING (perform_create) ===")
-        print(f"Keyword Score:    {keyword_score}")
-        print(f"LLM Score:        {llm_score}")
-        print(f"Experience Score: {exp_score}")
-        print(f"Final Score:      {computed_score}")
-
-        # ✅ CHANGED — name/email/phone now come from extract_pii, not the LLM result
-        extracted_name = pii["name"]
-        if not extracted_name:
-            if pii["email"]:
-                extracted_name = pii["email"].split("@")[0].replace(".", " ").replace("_", " ").title()
-            else:
-                extracted_name = ""
-
-        resume.resume_text      = resume_text          # keep original for HR to read
-        resume.candidate_name   = extracted_name        # ✅ from extract_pii
-        resume.email            = pii["email"]          # ✅ from extract_pii
-        resume.phone            = pii["phone"]          # ✅ from extract_pii
-        resume.linkedin_url     = pii["linkedin_url"]   # ✅ NEW
-        resume.github_url       = pii["github_url"]     # ✅ NEW
-        resume.experience       = experience
-        resume.skills           = extracted_skills
-        resume.match_percentage = computed_score
-        resume.is_shortlisted   = computed_score >= 65.0
-        resume.fit_summary      = result.get("fit_summary", "")
+        resume.resume_text    = resume_text
+        resume.candidate_name = pii["name"] or "Unknown Candidate"
+        resume.email          = pii["email"]
+        resume.phone          = pii["phone"]
+        resume.linkedin_url   = pii["linkedin_url"]
+        resume.github_url     = pii["github_url"]
         resume.save()
 
-        if resume.is_shortlisted:
-            ShortlistedCandidate.objects.get_or_create(candidate=resume)
-            index_past_match(resume.id, redacted_text, job_request.title, extracted_skills, computed_score, resume.fit_summary)  # ← redacted_text now
-
-        index_job_request(job_request)
+        from .services.rag_store import index_resume
+        chroma_id = index_resume(
+            resume_id=resume.id,
+            redacted_text=redacted_text,
+            job_request_id=None,
+            original_filename=resume_url,
+        )
+        if chroma_id:
+            resume.chroma_id = chroma_id
+            resume.save(update_fields=["chroma_id"])
 
     def perform_destroy(self, instance):
         if self.request.user.role not in ["ADMIN", "RECRUITER"]:
@@ -290,98 +251,255 @@ class CandidateResumeViewSet(ModelViewSet):
         instance.delete()
 
 
-# ── BULK FILE UPLOAD ENDPOINT ─────────────────────────────────────────────────
+# ── BULK FILE UPLOAD — adds to POOL only, no job, no scoring ──────────────────
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def bulk_upload_resumes(request):
+    """
+    Bulk upload into the resume POOL. Extracts text, redacts PII,
+    embeds into ChromaDB, saves to CandidateResume. Does NOT score
+    against any job — use the screening endpoint for that, against
+    whichever job(s) the recruiter chooses, whenever they choose.
+    """
     if request.user.role != "RECRUITER":
         raise PermissionDenied("Only recruiters can upload resumes.")
 
-    job_request_id = request.data.get("job_request")
-    files          = request.FILES.getlist("files")
+    files = request.FILES.getlist("files")
+    if not files:
+        return Response({"error": "Files are required."}, status=400)
 
-    if not job_request_id or not files:
-        return Response({"error": "Job ID and files are required."}, status=400)
-
-    try:
-        job_request = JobRequest.objects.get(id=job_request_id, status="APPROVED")
-    except JobRequest.DoesNotExist:
-        return Response({"error": "Approved job request not found."}, status=404)
+    from .services.rag_store import index_resume
 
     processed_count = 0
     errors = []
 
     for f in files:
-        fname = f.name.lower()
-        if not (fname.endswith('.pdf') or fname.endswith('.jpg') or
-                fname.endswith('.jpeg') or fname.endswith('.png')):
-            errors.append(f"{f.name}: Unsupported file type")
+        fname = f.name
+        fname_lower = fname.lower()
+        if not (fname_lower.endswith('.pdf') or fname_lower.endswith('.jpg') or
+                fname_lower.endswith('.jpeg') or fname_lower.endswith('.png')):
+            errors.append(f"{fname}: Unsupported file type")
             continue
 
         try:
             f.seek(0)
             resume_text = extract_text_from_file(f)
         except Exception as e:
-            print(f"[BULK UPLOAD] Extraction error on {f.name}: {e}")
-            errors.append(f"{f.name}: extraction failed — {str(e)}")
+            print(f"[BULK UPLOAD] Extraction error on {fname}: {e}")
+            errors.append(f"{fname}: extraction failed — {str(e)}")
+            continue
+
+        if not resume_text or len(resume_text.strip()) < 30:
+            errors.append(f"{fname}: Unreadable or empty file")
             continue
 
         try:
-            if not resume_text or len(resume_text.strip()) < 30:
-                errors.append(f"{f.name}: Unreadable or empty file")
-                continue
-
-            required_skills = job_request.skills_list() or []
-            result = extract_with_ollama(
-                resume_text, required_skills,
-                job_context="", past_matches="",
-                filename=f.name, uploaded_by=str(request.user)
-            )
-            if not result:
-                result = {
-                    "name": "", "email": "", "phone": "", "experience": 0.0,
-                    "skills": [], "score": 0.0, "fit_summary": "", "llm_score": 0,
-                }
-
-            print(f"[DEBUG] bulk_upload → result skills: {result.get('skills')}")
+            pii = extract_pii(resume_text)
+            redacted_text = redact_pii(resume_text)
 
             f.seek(0)
             resume = CandidateResume.objects.create(
-                job_request  = job_request,
-                uploaded_by  = request.user,
-                resume_url   = "",
-                resume_file  = f,
-                resume_text  = resume_text
+                uploaded_by    = request.user,
+                resume_url     = "",
+                resume_file    = f,
+                resume_text    = resume_text,
+                candidate_name = pii["name"] or fname.rsplit('.', 1)[0].replace('_', ' ').title(),
+                email          = pii["email"],
+                phone          = pii["phone"],
+                linkedin_url   = pii["linkedin_url"],
+                github_url     = pii["github_url"],
             )
 
-            score = _process_resume(
-                resume, resume_text, job_request,
-                filename=f.name, uploaded_by=str(request.user),
-                result=result,
+            chroma_id = index_resume(
+                resume_id=resume.id,
+                redacted_text=redacted_text,
+                job_request_id=None,
+                original_filename=fname,
             )
-            print(f"[BULK UPLOAD] Processed {f.name}: {score:.1f}%")
+            if chroma_id:
+                resume.chroma_id = chroma_id
+                resume.save(update_fields=["chroma_id"])
+
             processed_count += 1
+            print(f"[BULK UPLOAD] Added to pool: {fname}")
 
         except Exception as e:
-            print(f"[BULK UPLOAD] Error on {f.name}: {e}")
-            errors.append(f"{f.name}: {str(e)}")
+            print(f"[BULK UPLOAD] Error on {fname}: {e}")
+            errors.append(f"{fname}: {str(e)}")
 
     return Response({
-        "message":   f"Processed {processed_count} of {len(files)} file(s) successfully.",
+        "message":   f"Added {processed_count} of {len(files)} resume(s) to the pool.",
         "processed": processed_count,
         "errors":    errors
     })
 
 
-class ShortlistedCandidateViewSet(ModelViewSet):
-    serializer_class   = ShortlistedCandidateSerializer
+# ── SCREEN THE POOL AGAINST A JOB — the new core screening endpoint ───────────
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def screen_pool_for_job(request):
+    if request.user.role != "RECRUITER":
+        raise PermissionDenied("Only recruiters can run screening.")
+
+    job_request_id = request.data.get("job_request")
+    threshold = float(request.data.get("threshold", SHORTLIST_THRESHOLD))
+
+    if not job_request_id:
+        return Response({"error": "job_request is required."}, status=400)
+
+    try:
+        job_request = JobRequest.objects.get(id=job_request_id, status="APPROVED")
+    except JobRequest.DoesNotExist:
+        return Response({"error": "Approved job request not found."}, status=404)
+
+    pool = CandidateResume.objects.exclude(resume_text="")
+    if not pool.exists():
+        return Response({"message": "Resume pool is empty.", "shortlisted": []})
+
+    existing_screenings = {
+        s.resume_id: s for s in
+        ResumeScreening.objects.filter(job_request=job_request)
+    }
+
+    # For threshold changes — just update is_shortlisted, no re-running Ollama
+    for resume_id, screening in existing_screenings.items():
+        if screening.threshold_used != threshold:
+            screening.is_shortlisted = screening.llm_score >= threshold
+            screening.threshold_used = threshold
+            screening.save(update_fields=["is_shortlisted", "threshold_used"])
+
+    # Only truly new resumes (not yet screened at all) need Ollama
+    pending_pool = [
+        r for r in pool
+        if r.id not in existing_screenings
+    ]
+
+    from .services.rag_store import query_similar_resumes
+    job_text = f"{job_request.title} {job_request.description or ''} {job_request.skills_required or ''}"
+    similar_ids = set(str(i) for i in query_similar_resumes(job_text, top_k=50))
+    if similar_ids:
+        pending_pool = [r for r in pending_pool if str(r.id) in similar_ids]
+        print(f"[VECTOR FILTER] Reduced to {len(pending_pool)} candidates after embedding filter")
+    else:
+        print("[VECTOR FILTER] No vector matches — processing full pending pool")
+
+    from .services.sharepoint_service import upload_resume_to_sharepoint
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    newly_screened_count = 0
+    newly_shortlisted_count = 0
+    errors = []
+
+    def screen_one(resume):
+        try:
+            return (resume, _process_resume(
+                resume, resume.resume_text, job_request,
+                filename=resume.original_filename or resume.candidate_name,
+                uploaded_by=str(request.user),
+                threshold=threshold,
+            ))
+        except Exception as e:
+            return (resume, e)
+
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        futures = {executor.submit(screen_one, r): r for r in pending_pool}
+        for future in as_completed(futures):
+            resume, result = future.result()
+            if isinstance(result, Exception):
+                print(f"[Screen Pool] Error on resume #{resume.id}: {result}")
+                errors.append({"resume_id": resume.id, "error": str(result)})
+            else:
+                newly_screened_count += 1
+                if result.is_shortlisted:
+                    newly_shortlisted_count += 1
+                    try:
+                        if resume.resume_file:
+                            resume.resume_file.seek(0)
+                            file_bytes = resume.resume_file.read()
+                            skillset_str = ", ".join(result.matched_skills) if result.matched_skills else ""
+                            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                            sp_filename = f"{timestamp}_{resume.resume_file.name.split('/')[-1]}"
+                            upload_resume_to_sharepoint(sp_filename, file_bytes, skillset_str)
+                    except Exception as e:
+                        print(f"[Screen Pool] SharePoint push failed for resume #{resume.id}: {e}")
+
+    shortlist_qs = ResumeScreening.objects.filter(
+        job_request=job_request, is_shortlisted=True
+    ).select_related("resume").order_by("-llm_score")
+
+    shortlisted = [
+        {
+            "screening_id": sc.id,
+            "resume_id":    sc.resume_id,
+            "candidate":    sc.resume.candidate_name or "Unknown",
+            "llm_score":    sc.llm_score,
+            "status":       sc.status,
+        }
+        for sc in shortlist_qs
+    ]
+
+    skipped_count = len(existing_screenings)
+
+    return Response({
+        "message": (
+            f"Screened {newly_screened_count} resume(s) against '{job_request.title}' "
+            f"({skipped_count} already screened, skipped). "
+            f"{newly_shortlisted_count} newly shortlisted. "
+            f"{len(shortlisted)} total shortlisted."
+        ),
+        "shortlisted": shortlisted,
+        "errors": errors,
+    })
+
+# ── GET existing shortlist for a job WITHOUT re-screening ────────────────────
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def job_shortlist_view(request, job_id):
+    """
+    Returns the current shortlist for a job from already-saved
+    ResumeScreening rows — no LLM calls, no re-screening.
+    """
+    try:
+        job_request = JobRequest.objects.get(id=job_id, status="APPROVED")
+    except JobRequest.DoesNotExist:
+        return Response({"error": "Approved job request not found."}, status=404)
+
+    shortlist_qs = ResumeScreening.objects.filter(
+        job_request=job_request, is_shortlisted=True
+    ).select_related("resume").order_by("-llm_score")
+
+    results = [
+        {
+            "id":            sc.id,
+            "candidate_name": sc.resume.candidate_name or "Unknown",
+            "email":         sc.resume.email or "",
+            "llm_score":     sc.llm_score,
+        }
+        for sc in shortlist_qs
+    ]
+
+    return Response({"results": results})
+
+
+class ResumeScreeningViewSet(ModelViewSet):
+    """
+    Replaces the old ShortlistedCandidateViewSet. Each row is one
+    (resume, job_request) screening result.
+    """
+    serializer_class   = ResumeScreeningSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
+        queryset = ResumeScreening.objects.all().select_related("resume", "job_request")
+
+        job_request_id = self.request.query_params.get('job_request')
+        if job_request_id:
+            queryset = queryset.filter(job_request_id=job_request_id)
+
         if user.role in ["ADMIN", "RECRUITER", "HR", "JUNIOR_HR"]:
-            return ShortlistedCandidate.objects.all().select_related("candidate__job_request")
-        return ShortlistedCandidate.objects.none()
+            return queryset
+        return ResumeScreening.objects.none()
 
     def perform_update(self, serializer):
         if self.request.user.role not in ["HR", "JUNIOR_HR", "ADMIN"]:
@@ -401,7 +519,7 @@ class InterviewViewSet(ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.role in ["ADMIN", "HR", "JUNIOR_HR", "RECRUITER"]:
-            return Interview.objects.all().select_related("candidate__candidate")
+            return Interview.objects.all().select_related("candidate__resume", "candidate__job_request")
         return Interview.objects.none()
 
     def perform_update(self, serializer):
@@ -422,8 +540,9 @@ class InterviewViewSet(ModelViewSet):
         print("=== INTERVIEW CREATED, ATTEMPTING TO SEND EMAIL ===")
 
         try:
-            candidate_resume = interview.candidate.candidate
-            job_title        = candidate_resume.job_request.title
+            screening = interview.candidate              # ResumeScreening
+            candidate_resume = screening.resume           # CandidateResume
+            job_title = screening.job_request.title
 
             send_interview_email(
                 candidate_email = candidate_resume.email or "no-email@example.com",
@@ -460,15 +579,12 @@ def serve_resume(request, pk):
     try:
         resume = CandidateResume.objects.get(pk=pk)
 
-        # Direct URL (Google Drive, etc.)
         if resume.resume_url and resume.resume_url.startswith(('http://', 'https://')):
             return redirect(resume.resume_url)
 
-        # Uploaded file stored in Django media
         if hasattr(resume, 'resume_file') and resume.resume_file:
             return redirect(resume.resume_file.url)
 
-        # SharePoint-sourced resume — fetch and serve bytes
         if resume.original_filename:
             from .services.sharepoint_service import download_resume
             from django.http import HttpResponse
@@ -523,19 +639,24 @@ def resend_email_view(request, log_id):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def manual_invite_view(request, candidate_id):
+    """
+    candidate_id here is a ResumeScreening id (not CandidateResume),
+    since an interview/invite is for a specific (resume, job) screening.
+    """
     if request.user.role not in ["HR", "JUNIOR_HR", "ADMIN"]:
         raise PermissionDenied("Only HR or Admin can send manual invites.")
 
     try:
-        candidate_resume = CandidateResume.objects.get(pk=candidate_id)
-    except CandidateResume.DoesNotExist:
-        return Response({"error": "Candidate not found"}, status=404)
+        screening = ResumeScreening.objects.select_related("resume", "job_request").get(pk=candidate_id)
+    except ResumeScreening.DoesNotExist:
+        return Response({"error": "Screening record not found"}, status=404)
 
     try:
-        interview = Interview.objects.get(candidate__candidate=candidate_resume)
+        interview = Interview.objects.get(candidate=screening)
     except Interview.DoesNotExist:
         return Response({"error": "No interview scheduled yet. HR must schedule one first."}, status=400)
 
+    candidate_resume = screening.resume
     if not candidate_resume.email:
         return Response({"error": "Candidate has no email on file."}, status=400)
 
@@ -543,7 +664,7 @@ def manual_invite_view(request, candidate_id):
         send_interview_email(
             candidate_email = candidate_resume.email,
             candidate_name  = candidate_resume.candidate_name or "Candidate",
-            job_title       = candidate_resume.job_request.title if candidate_resume.job_request else "Open Position",
+            job_title       = screening.job_request.title if screening.job_request else "Open Position",
             interview_date  = str(interview.interview_date),
             interview_time  = str(interview.interview_time),
             mode            = interview.mode,
@@ -560,24 +681,23 @@ def manual_invite_view(request, candidate_id):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def ingest_local_folder(request):
+    """
+    Ingests a local folder into the POOL only — no job, no scoring.
+    Matches the new bulk_upload_resumes behavior.
+    """
     if request.user.role != "RECRUITER":
         raise PermissionDenied("Only recruiters can ingest folders.")
 
-    folder_path    = request.data.get("folder_path")
-    job_request_id = request.data.get("job_request")
-
-    if not folder_path or not job_request_id:
-        return Response({"error": "folder_path and job_request are required."}, status=400)
-
-    try:
-        job_request = JobRequest.objects.get(id=job_request_id, status="APPROVED")
-    except JobRequest.DoesNotExist:
-        return Response({"error": "Approved job request not found."}, status=404)
+    folder_path = request.data.get("folder_path")
+    if not folder_path:
+        return Response({"error": "folder_path is required."}, status=400)
 
     if not os.path.isdir(folder_path):
         return Response({"error": f"Folder '{folder_path}' does not exist."}, status=400)
 
     def process_in_background():
+        from .services.rag_store import index_resume
+
         base_dir  = Path(folder_path)
         all_files = (
             list(base_dir.rglob('*.pdf')) +
@@ -595,18 +715,32 @@ def ingest_local_folder(request):
                     print(f"[LOCAL INGEST] Skipping {filename}: unreadable")
                     continue
 
+                pii = extract_pii(resume_text)
+                redacted_text = redact_pii(resume_text)
+
                 resume = CandidateResume.objects.create(
-                    job_request = job_request,
-                    uploaded_by = request.user,
-                    resume_url  = "",
-                    resume_text = resume_text
+                    uploaded_by    = request.user,
+                    resume_url     = "",
+                    resume_text    = resume_text,
+                    original_filename = filename,
+                    candidate_name = pii["name"] or filename.rsplit('.', 1)[0].replace('_', ' ').title(),
+                    email          = pii["email"],
+                    phone          = pii["phone"],
+                    linkedin_url   = pii["linkedin_url"],
+                    github_url     = pii["github_url"],
                 )
 
-                score = _process_resume(
-                    resume, resume_text, job_request,
-                    filename=filename, uploaded_by=str(request.user)
+                chroma_id = index_resume(
+                    resume_id=resume.id,
+                    redacted_text=redacted_text,
+                    job_request_id=None,
+                    original_filename=filename,
                 )
-                print(f"[LOCAL INGEST] [{i+1}/{len(all_files)}] Scored {filename}: {score:.1f}%")
+                if chroma_id:
+                    resume.chroma_id = chroma_id
+                    resume.save(update_fields=["chroma_id"])
+
+                print(f"[LOCAL INGEST] [{i+1}/{len(all_files)}] Added to pool: {filename}")
 
             except Exception as e:
                 print(f"[LOCAL INGEST] Error processing {filename}: {e}")
@@ -614,274 +748,37 @@ def ingest_local_folder(request):
     thread = threading.Thread(target=process_in_background)
     thread.daemon = True
     thread.start()
-    return Response({"message": f"Processing started in background for folder: {folder_path}"})
-
-
-class RunSharePointScreeningView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        if request.user.role != "RECRUITER":
-            raise PermissionDenied("Only recruiters can run screening.")
-
-        job_request_id = request.data.get("job_request_id")
-        if not job_request_id:
-            return Response({"error": "job_request_id is required."}, status=drf_status.HTTP_400_BAD_REQUEST)
-
-        try:
-            job_request = JobRequest.objects.get(id=job_request_id, status="APPROVED")
-        except JobRequest.DoesNotExist:
-            return Response({"error": "Approved job request not found."}, status=drf_status.HTTP_404_NOT_FOUND)
-
-        all_filenames = get_all_filenames()
-        if not all_filenames:
-            return Response({"message": "No PDF files found in SharePoint."})
-
-        already_screened = set(
-            CandidateResume.objects.filter(
-                job_request=job_request
-            ).values_list("original_filename", flat=True)
-        )
-
-        pending = [f for f in all_filenames if f not in already_screened]
-
-        if not pending:
-            return Response({"message": "All resumes already screened. No new files to process."})
-
-        results         = []
-        required_skills = job_request.skills_list() or []
-
-        for filename in pending:
-            tmp_path = None
-            try:
-                pdf_bytes = download_resume(filename)
-                if not pdf_bytes:
-                    results.append({"file": filename, "error": "Download failed"})
-                    continue
-
-                tmp_path    = save_pdf_to_tempfile(pdf_bytes, filename)
-                resume_text = extract_text_from_file(tmp_path)
-
-                if not resume_text or len(resume_text.strip()) < 30:
-                    results.append({"file": filename, "error": "Unreadable or empty PDF"})
-                    continue
-
-                result = extract_with_ollama(
-                    resume_text, required_skills,
-                    job_context="", past_matches="",
-                    filename=filename, uploaded_by=str(request.user)
-                )
-                if not result:
-                    result = {"name": "", "email": "", "phone": "", "experience": 0.0,
-                              "skills": [], "score": 0.0, "fit_summary": "", "llm_score": 0}
-
-                skills_list = (
-                    result["skills"] if isinstance(result["skills"], list)
-                    else [s.strip() for s in result["skills"].split(",") if s.strip()]
-                )
-
-                resume = CandidateResume.objects.create(
-                    job_request       = job_request,
-                    uploaded_by       = request.user,
-                    original_filename = filename,
-                    resume_text       = resume_text,
-                    resume_url        = "",
-                )
-
-                score = _process_resume(
-                    resume, resume_text, job_request,
-                    filename=filename, uploaded_by=str(request.user),
-                    result=result,
-                )
-
-                post_screening_result(filename, ", ".join(skills_list))  # disabled — overwrites file
-
-                results.append({
-                    "file":      filename,
-                    "candidate": resume.candidate_name or "Unknown",
-                    "score":     score,
-                    "status":    "Shortlisted" if score >= 65.0 else "Not Shortlisted",
-                })
-
-            except Exception as e:
-                print(f"[SharePoint Screening] Error on {filename}: {e}")
-                results.append({"file": filename, "error": str(e)})
-
-            finally:
-                if tmp_path and os.path.exists(tmp_path):
-                    os.remove(tmp_path)
-
-        shortlisted = len([r for r in results if r.get("status") == "Shortlisted"])
-        return Response({
-            "message": f"Screened {len(results)} resumes. {shortlisted} shortlisted.",
-            "results": results,
-        })
-
-
-@api_view(["POST"])
-@permission_classes([IsAuthenticated])
-def upload_and_screen(request):
-    if request.user.role != "RECRUITER":
-        raise PermissionDenied("Only recruiters can upload resumes.")
-
-    job_request_id = request.data.get("job_request")
-    files = request.FILES.getlist("files")
-    top_n = int(request.data.get("top_n", 15))   # ✅ NEW — optional, defaults to 15
-
-    if not job_request_id or not files:
-        return Response({"error": "Job ID and files are required."}, status=400)
-
-    try:
-        job_request = JobRequest.objects.get(id=job_request_id, status="APPROVED")
-    except JobRequest.DoesNotExist:
-        return Response({"error": "Approved job request not found."}, status=404)
-
-    from .services.sharepoint_service import upload_resume_to_sharepoint
-    from .services.pii_redactor import extract_pii, redact_pii
-    from .services.rag_store import index_resume, find_similar_resumes   # ✅ NEW
-
-    results = []
-    required_skills = job_request.skills_list() or []
-
-    # ── PASS 1 — extract, redact, save, embed every file. No LLM scoring yet. ──
-    pending = []   # list of dicts holding everything PASS 2 needs per resume
-
-    for f in files:
-        fname = f.name
-
-        if not fname.lower().endswith(".pdf"):
-            results.append({"file": fname, "error": "Only PDF files supported"})
-            continue
-
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        sp_filename = f"{timestamp}_{fname}"
-
-        try:
-            f.seek(0)
-            file_bytes = f.read()
-
-            resume_text = extract_text_from_file(BytesIO(file_bytes))
-            if not resume_text or len(resume_text.strip()) < 30:
-                results.append({"file": fname, "error": "Unreadable or empty PDF"})
-                continue
-
-            pii = extract_pii(resume_text)
-            redacted_text = redact_pii(resume_text)
-
-            resume = CandidateResume.objects.create(
-                job_request       = job_request,
-                uploaded_by       = request.user,
-                original_filename = sp_filename,
-                resume_url        = "",
-                resume_text       = resume_text,
-                candidate_name    = pii["name"],
-                email             = pii["email"],
-                phone             = pii["phone"],
-                linkedin_url      = pii["linkedin_url"],
-                github_url        = pii["github_url"],
-            )
-
-            chroma_id = index_resume(
-                resume_id=resume.id,
-                redacted_text=redacted_text,
-                job_request_id=job_request.id,
-                original_filename=sp_filename,
-            )
-            if chroma_id:
-                resume.chroma_id = chroma_id
-                resume.save(update_fields=["chroma_id"])
-
-            pending.append({
-                "resume": resume,
-                "redacted_text": redacted_text,
-                "fname": fname,
-                "sp_filename": sp_filename,
-                "file_bytes": file_bytes,
-            })
-
-        except Exception as e:
-            print(f"[Upload & Screen] Error on {fname}: {e}")
-            results.append({"file": fname, "error": str(e)})
-
-    if not pending:
-        return Response({"message": "No resumes could be processed.", "results": results})
-
-    # ── PASS 2 — similarity pre-filter, THEN LLM-score only the top-N ───────────
-    similar_ids = set(find_similar_resumes(job_request, top_n=top_n))
-
-    shortlisted_count = 0
-
-    for item in pending:
-        resume = item["resume"]
-
-        if str(resume.id) not in similar_ids:
-            results.append({
-                "file": item["fname"],
-                "candidate": resume.candidate_name or "Unknown",
-                "status": "Not pre-filtered (low similarity to job)",
-            })
-            continue
-
-        try:
-            score = _process_resume(
-                resume, resume.resume_text, job_request,
-                filename=item["fname"], uploaded_by=str(request.user),
-            )
-
-            if resume.is_shortlisted:
-                shortlisted_count += 1
-                skills_str = ", ".join(resume.skills) if isinstance(resume.skills, list) else ""
-                upload_resume_to_sharepoint(
-                    item["sp_filename"], item["file_bytes"], skills_str
-                )
-
-            results.append({
-                "file":      item["fname"],
-                "candidate": resume.candidate_name or "Unknown",
-                "score":     score,
-                "status":    "Shortlisted" if resume.is_shortlisted else "Not Shortlisted",
-            })
-
-        except Exception as e:
-            print(f"[Upload & Screen] Scoring error on {item['fname']}: {e}")
-            results.append({"file": item["fname"], "error": str(e)})
-
-    return Response({
-        "message": f"Uploaded {len(pending)} resume(s). {shortlisted_count} shortlisted.",
-        "results": results,
-    })
-
-
-from collections import Counter
+    return Response({"message": f"Pool ingestion started in background for folder: {folder_path}"})
 
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def recruiter_analytics(request):
+    """
+    Rebuilt to query through ResumeScreening, since score/shortlist
+    status no longer live on CandidateResume directly.
+    """
     if request.user.role != "RECRUITER":
         raise PermissionDenied("Only recruiters can view analytics.")
 
-    resumes = CandidateResume.objects.filter(uploaded_by=request.user)
+    screenings = ResumeScreening.objects.filter(resume__uploaded_by=request.user).select_related("job_request", "resume")
 
-    # Score distribution
     buckets = {"0-20": 0, "20-40": 0, "40-60": 0, "60-80": 0, "80-100": 0}
-    for r in resumes:
-        score = r.match_percentage or 0
+    for s in screenings:
+        score = s.llm_score or 0
         if score < 20:   buckets["0-20"] += 1
         elif score < 40: buckets["20-40"] += 1
         elif score < 60: buckets["40-60"] += 1
         elif score < 80: buckets["60-80"] += 1
         else:            buckets["80-100"] += 1
 
-    # Shortlist rate per job
-    from jobs.models import JobRequest
     job_stats = []
     for job in JobRequest.objects.filter(status="APPROVED"):
-        job_resumes = resumes.filter(job_request=job)
-        total = job_resumes.count()
+        job_screenings = screenings.filter(job_request=job)
+        total = job_screenings.count()
         if total == 0:
             continue
-        shortlisted = job_resumes.filter(is_shortlisted=True).count()
+        shortlisted = job_screenings.filter(is_shortlisted=True).count()
         job_stats.append({
             "title": job.title,
             "total": total,
@@ -889,20 +786,22 @@ def recruiter_analytics(request):
             "rate": round((shortlisted / total) * 100, 1)
         })
 
-    # Top 10 skills
     skill_counter = Counter()
-    for r in resumes:
-        skills = r.skills if isinstance(r.skills, list) else [s.strip() for s in (r.skills or "").split(",") if s.strip()]
+    for s in screenings:
+        skills = s.matched_skills if isinstance(s.matched_skills, list) else []
         for skill in skills:
             if skill:
                 skill_counter[skill.lower().title()] += 1
     top_skills = [{"skill": k, "count": v} for k, v in skill_counter.most_common(10)]
 
+    total_screenings = screenings.count()
+    total_shortlisted = screenings.filter(is_shortlisted=True).count()
+
     return Response({
         "score_distribution": buckets,
         "job_stats": job_stats,
         "top_skills": top_skills,
-        "total_uploaded": resumes.count(),
-        "total_shortlisted": resumes.filter(is_shortlisted=True).count(),
-        "shortlist_rate": round((resumes.filter(is_shortlisted=True).count() / resumes.count() * 100), 1) if resumes.count() > 0 else 0,
+        "total_uploaded": total_screenings,
+        "total_shortlisted": total_shortlisted,
+        "shortlist_rate": round((total_shortlisted / total_screenings * 100), 1) if total_screenings > 0 else 0,
     })

@@ -58,6 +58,16 @@ def _get_match_collection():
     return _match_collection
 
 
+def _get_resume_collection():
+    global _resume_collection
+    if _resume_collection is None:
+        _resume_collection = _get_client().get_or_create_collection(
+            name="resumes",
+            metadata={"hnsw:space": "cosine"}
+        )
+    return _resume_collection
+
+
 # ── Embedding via Ollama nomic-embed-text ─────────────────────────────────────
 
 def _embed(text: str) -> list:
@@ -73,11 +83,30 @@ def _embed(text: str) -> list:
 
 # ── Job request indexing ──────────────────────────────────────────────────────
 
+def _build_job_doc(job_request) -> str:
+    """Build a rich text document from a job request for embedding."""
+    parts = [
+        f"Job Title: {job_request.title}",
+        f"Department: {job_request.department or 'Not specified'}",
+        f"Experience Required: {job_request.experience_required} years",
+        f"Vacancies: {job_request.vacancies}",
+        f"Required Skills: {job_request.skills_required or 'Not specified'}",
+    ]
+    if job_request.description:
+        parts.append(f"Description: {job_request.description}")
+    if getattr(job_request, "key_responsibilities", None):
+        parts.append(f"Key Responsibilities: {job_request.key_responsibilities}")
+    if getattr(job_request, "basic_qualifications", None):
+        parts.append(f"Basic Qualifications: {job_request.basic_qualifications}")
+    if getattr(job_request, "preferred_qualifications", None):
+        parts.append(f"Preferred Qualifications: {job_request.preferred_qualifications}")
+    return "\n".join(parts)
+
+
 def index_job_request(job_request) -> bool:
     """
     Index a job request into ChromaDB.
     Call this when a job request is APPROVED so it's ready for retrieval.
-    Also call on create/update in case content changes.
     """
     try:
         doc_text = _build_job_doc(job_request)
@@ -104,34 +133,11 @@ def index_job_request(job_request) -> bool:
         return False
 
 
-def _build_job_doc(job_request) -> str:
-    """Build a rich text document from a job request for embedding."""
-    parts = [
-        f"Job Title: {job_request.title}",
-        f"Department: {job_request.department or 'Not specified'}",
-        f"Experience Required: {job_request.experience_required} years",
-        f"Vacancies: {job_request.vacancies}",
-        f"Required Skills: {job_request.skills_required or 'Not specified'}",
-    ]
-    if job_request.description:
-        parts.append(f"Description: {job_request.description}")
-    if getattr(job_request, "key_responsibilities", None):
-        parts.append(f"Key Responsibilities: {job_request.key_responsibilities}")
-    if getattr(job_request, "basic_qualifications", None):
-        parts.append(f"Basic Qualifications: {job_request.basic_qualifications}")
-    if getattr(job_request, "preferred_qualifications", None):
-        parts.append(f"Preferred Qualifications: {job_request.preferred_qualifications}")
-    return "\n".join(parts)
-
-
 # ── Past match indexing ───────────────────────────────────────────────────────
 
 def index_past_match(resume_id: int, resume_text: str, job_title: str,
                      skills: list, match_score: float, fit_summary: str) -> bool:
-    """
-    Store a shortlisted candidate's resume + outcome in the match collection.
-    This lets future RAG retrievals learn from past successful matches.
-    """
+    """Store a shortlisted candidate's resume + outcome in the match collection."""
     try:
         doc_text = (
             f"Job: {job_title}\n"
@@ -165,16 +171,10 @@ def index_past_match(resume_id: int, resume_text: str, job_title: str,
 # ── Retrieval ─────────────────────────────────────────────────────────────────
 
 def retrieve_job_context(job_request, resume_text: str, n_results: int = 2) -> str:
-    """
-    Retrieve the most relevant job context for this resume.
-    Returns a formatted string ready to inject into the Ollama prompt.
-    """
+    """Retrieve the most relevant job context for this resume."""
     try:
-        # Primary: always include the actual job request content
         primary = _build_job_doc(job_request)
 
-        # Secondary: find similar jobs from the vector store
-        # (useful when the job has little description but similar ones exist)
         similar_jobs = ""
         query_text = f"{resume_text[:2000]} {job_request.skills_required}"
         embedding = _embed(query_text)
@@ -182,7 +182,7 @@ def retrieve_job_context(job_request, resume_text: str, n_results: int = 2) -> s
         if embedding:
             collection = _get_job_collection()
             count = collection.count()
-            if count > 1:  # only query if there's more than the current job
+            if count > 1:
                 results = collection.query(
                     query_embeddings=[embedding],
                     n_results=min(n_results, count),
@@ -201,16 +201,11 @@ def retrieve_job_context(job_request, resume_text: str, n_results: int = 2) -> s
         return primary + similar_jobs
     except Exception as e:
         print(f"[RAG] retrieve_job_context error: {e}")
-        # Graceful fallback — just return the job text
         return _build_job_doc(job_request)
 
 
-def retrieve_past_matches(resume_text: str, job_title: str,
-                          n_results: int = 2) -> str:
-    """
-    Retrieve past successful match summaries similar to this resume+job combo.
-    Returns formatted string for prompt injection.
-    """
+def retrieve_past_matches(resume_text: str, job_title: str, n_results: int = 2) -> str:
+    """Retrieve past successful match summaries similar to this resume+job combo."""
     try:
         query_text = f"{job_title} {resume_text[:1500]}"
         embedding = _embed(query_text)
@@ -234,37 +229,17 @@ def retrieve_past_matches(resume_text: str, job_title: str,
     except Exception as e:
         print(f"[RAG] retrieve_past_matches error: {e}")
         return ""
-def _get_resume_collection():
-    global _resume_collection
-    if _resume_collection is None:
-        _resume_collection = _get_client().get_or_create_collection(
-            name="resumes",
-            metadata={"hnsw:space": "cosine"}
-        )
-    return _resume_collection
- 
- 
+
+
 # ── Resume indexing ────────────────────────────────────────────────────────
- 
+
 def index_resume(resume_id, redacted_text: str, job_request_id, original_filename: str = "") -> str | bool:
-    """
-    Embed and store a resume's REDACTED text in ChromaDB.
- 
-    Call this once per resume, right after PII redaction, regardless
-    of which upload path (bulk, single-URL, SharePoint screening) the
-    resume came through.
- 
-    Returns the chroma_id (== str(resume_id)) on success, so the
-    caller can save it onto CandidateResume.chroma_id. Returns False
-    on failure (e.g. embedding model unreachable) — callers should
-    treat this the same way index_job_request() treats a False return:
-    log it and move on, don't block the rest of the pipeline on it.
-    """
+    """Embed and store a resume's REDACTED text in ChromaDB."""
     try:
         embedding = _embed(redacted_text[:8000])
         if not embedding:
             return False
- 
+
         chroma_id = str(resume_id)
         collection = _get_resume_collection()
         collection.upsert(
@@ -273,56 +248,85 @@ def index_resume(resume_id, redacted_text: str, job_request_id, original_filenam
             documents=[redacted_text],
             metadatas=[{
                 "resume_id":         str(resume_id),
-                "job_request_id":    str(job_request_id),
+                "job_request_id":    str(job_request_id) if job_request_id else "None",
                 "original_filename": original_filename or "",
             }]
         )
-        print(f"[RAG] Indexed resume #{resume_id} for job #{job_request_id}")
+        print(f"[RAG] Indexed resume #{resume_id}")
         return chroma_id
     except Exception as e:
         print(f"[RAG] index_resume error: {e}")
         return False
- 
- 
-# ── Resume retrieval (the pre-filter step) ────────────────────────────────
- 
-def find_similar_resumes(job_request, top_n: int = 15) -> list:
+
+
+# ── Resume retrieval (Pre-filter for Pool Screening) ────────────────────────
+
+def query_similar_resumes(job_text, top_k=50):
     """
-    Given a job request, return the IDs of the top_n most similar
-    resumes already indexed, restricted to resumes uploaded for
-    THIS job (so you're not matching candidates against an unrelated
-    role's resume pool).
- 
-    This is the "Stage 1 retrieval" step in the retrieve-then-rerank
-    pattern — fast vector similarity narrows the field BEFORE the
-    expensive LLM scoring step runs on just these results.
- 
-    Returns a list of resume_id strings (matching CandidateResume.id),
-    NOT chroma_ids directly, since chroma_id == str(resume_id) by
-    construction in index_resume() above.
+    Searches ChromaDB for resumes most similar to the job description.
+    Returns a list of INTEGER resume IDs.
     """
     try:
-        query_text = _build_job_doc(job_request)
-        embedding = _embed(query_text)
+        # 1. Generate embedding using Ollama
+        embedding = _embed(job_text[:8000])
         if not embedding:
-            print("[RAG] find_similar_resumes: embedding failed, returning empty list")
+            print("[RAG] query_similar_resumes: embedding failed")
             return []
- 
+
+        # 2. Get the resume collection
         collection = _get_resume_collection()
         count = collection.count()
         if count == 0:
             return []
- 
+
+        # 3. Query ChromaDB (NO job_request_id filter, because pool resumes have "None")
         results = collection.query(
             query_embeddings=[embedding],
-            n_results=min(top_n, count),
-            where={"job_request_id": str(job_request.id)},
+            n_results=min(top_k, count),
+            include=["metadatas"]
         )
- 
-        ids = results.get("ids", [[]])[0]
-        print(f"[RAG] find_similar_resumes: {len(ids)} candidates for job #{job_request.id}")
-        return ids
- 
+        
+        # 4. Extract integer IDs for Django
+        resume_ids = []
+        if results and results['metadatas'] and results['metadatas'][0]:
+            for meta in results['metadatas'][0]:
+                if 'resume_id' in meta:
+                    resume_ids.append(int(meta['resume_id']))
+                    
+        print(f"[RAG] query_similar_resumes: found {len(resume_ids)} vector matches")
+        return resume_ids
+        
     except Exception as e:
-        print(f"[RAG] find_similar_resumes error: {e}")
+        print(f"[RAG STORE] Vector search failed, falling back to full pool: {e}")
         return []
+
+
+def find_best_matching_job(redacted_resume_text: str):
+    """Given a resume's redacted text, find the single most similar APPROVED job request."""
+    try:
+        embedding = _embed(redacted_resume_text[:8000])
+        if not embedding:
+            return None, 0.0
+
+        collection = _get_job_collection()
+        count = collection.count()
+        if count == 0:
+            return None, 0.0
+
+        results = collection.query(
+            query_embeddings=[embedding],
+            n_results=1,
+            where={"status": "APPROVED"},
+        )
+        ids = results.get("ids", [[]])[0]
+        distances = results.get("distances", [[]])[0]
+
+        if not ids:
+            return None, 0.0
+
+        similarity = 1.0 - distances[0]
+        return ids[0], similarity
+
+    except Exception as e:
+        print(f"[RAG] find_best_matching_job error: {e}")
+        return None, 0.0

@@ -244,6 +244,8 @@ def extract_with_ollama(resume_text, required_skills, job_context="", past_match
 
     prompt = f"""You are a resume data extractor. Your ONLY job is to extract fields from the resume text below.
 
+Note: This text has had personal identifying information (names, emails, phone numbers, social links) replaced with placeholders like [REDACTED_NAME] or [REDACTED_EMAIL]. Treat any such placeholder as noise — ignore it completely, do not include it in any field, and do not try to reconstruct what it replaced.
+
 STRICT RULES:
 1. Extract ONLY what is explicitly written in the resume text.
 2. Do NOT guess, infer, or hallucinate any information.
@@ -258,10 +260,8 @@ STRICT RULES:
 - APIs
 - Methodologies (Agile, Scrum, Kanban)
 - CI/CD tools
-4. For EMAIL: extract ONLY valid email addresses containing @. LinkedIn/GitHub URLs are NOT emails.
-5. If a field is missing, leave it blank.
-6. EXPERIENCE: extract total years as a plain number only (e.g. 7, not 7+).
-7. LLM_SCORE:
+4. EXPERIENCE: extract total years as a plain number only (e.g. 7, not 7+).
+5. LLM_SCORE:
 Score the candidate against the JOB CONTEXT.
 
 Consider:
@@ -280,12 +280,9 @@ Consider:
 20 = poor match
 
 Return only an integer.
-8. FIT_SUMMARY: always provide 2-3 sentences — never leave blank.
+6. FIT_SUMMARY: always provide 2-3 sentences — never leave blank.
 
 Respond in this EXACT format with no extra text:
-NAME: <full name>
-EMAIL: <email with @ symbol only, or blank>
-PHONE: <digits only, or blank>
 EXPERIENCE: <number only>
 SKILLS: <comma separated technical skills>
 FIT_SUMMARY: <2-3 sentences>
@@ -295,7 +292,6 @@ LLM_SCORE: <integer 0-100>
 {resume_chunk}
 </RESUME>
 {context_section}"""
-
     model_name = getattr(settings, "OLLAMA_MODEL", "llama3")
 
     result = {

@@ -2,13 +2,11 @@ from django.contrib import admin
 
 from .models import (
     CandidateResume,
-    ShortlistedCandidate,
-    Interview
+    ResumeScreening,   # ✅ replaces ShortlistedCandidate
+    Interview,
+    ResumeProcessingLog,
 )
-# ── ADD THIS TO recruitment/admin.py ─────────────────────────────────────────
 
-from django.contrib import admin
-from .models import ResumeProcessingLog
 
 @admin.register(ResumeProcessingLog)
 class ResumeProcessingLogAdmin(admin.ModelAdmin):
@@ -22,14 +20,8 @@ class ResumeProcessingLogAdmin(admin.ModelAdmin):
         "extracted_skills", "llm_score", "status", "error_message",
     )
     ordering = ("-processed_at",)
-admin.site.register(
-    CandidateResume
-)
 
-admin.site.register(
-    ShortlistedCandidate
-)
 
-admin.site.register(
-    Interview
-)
+admin.site.register(CandidateResume)
+admin.site.register(ResumeScreening)   # ✅ replaces ShortlistedCandidate
+admin.site.register(Interview)

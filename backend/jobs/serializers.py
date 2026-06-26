@@ -22,15 +22,20 @@ class JobRequestSerializer(serializers.ModelSerializer):
         return obj.employee.email if obj.employee else None
 
     def get_resume_count(self, obj):
-        return obj.resumes.count()
+        # ✅ FIXED — resumes aren't tied to a job directly anymore;
+        # this now counts distinct resumes SCREENED against this job.
+        return obj.screenings.count()
 
     def get_shortlisted_count(self, obj):
-        return obj.resumes.filter(is_shortlisted=True).count()
+        # ✅ FIXED — is_shortlisted lives on ResumeScreening now, not CandidateResume
+        return obj.screenings.filter(is_shortlisted=True).count()
+
 
 class JobStatusUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobRequest
         fields = ["status"]
+
 
 class JobRequestEditSerializer(serializers.ModelSerializer):
     """Employee can only edit PENDING requests — status stays read-only."""

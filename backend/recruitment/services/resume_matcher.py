@@ -110,6 +110,20 @@ def match_resume(extracted_skills, required_skills):
         # Other
         "oop":                         "object oriented programming",
         "github":                      "git",
+        # Finance
+"tally":                "erp systems",
+"tally erp":            "erp systems",
+"accounting":           "financial analysis",
+"accounts payable":     "accounts payable/receivable",
+"accounts receivable":  "accounts payable/receivable",
+"gst":                  "tax analysis",
+"bookkeeping":          "general ledger",
+"ms excel":             "ms excel (advanced)",
+"excel":                "ms excel (advanced)",
+"power bi":             "data analysis",
+"mis":                  "mis reporting",
+"p&l":                  "profit & loss analysis",
+"profit and loss":      "profit & loss analysis",
     }
 
     REVERSE_ALIASES = {}
@@ -146,23 +160,40 @@ def match_resume(extracted_skills, required_skills):
     unmatched = []
 
     for req in required_skills:
-        req_forms = all_forms(req)
-        req_norm  = normalise(req)
+        # ✅ FIX: Split compound requirements like "accounts payable/receivable" 
+        # or "html/css" into separate parts so they match individually
+        req_parts = re.split(r'\s*[/&]\s*', req)
+        
+        req_matched = False
+        for part in req_parts:
+            part = part.strip()
+            if not part:
+                continue
+                
+            req_forms = all_forms(part)
+            req_norm  = normalise(part)
 
-        if req_forms & extracted_all:
-            matched.append(req)
-            continue
-        if _substring_match(req_norm, extracted_all):
-            matched.append(req)
-            continue
-        if any(_substring_match(rf, extracted_all) for rf in req_forms):
-            matched.append(req)
-            continue
-        if any(word_overlap(req_norm, ext) for ext in extracted_all):
-            matched.append(req)
-            continue
+            # 1. Exact alias match
+            if req_forms & extracted_all:
+                req_matched = True
+                break
+            # 2. Substring match (e.g., "python" inside "python developer")
+            if _substring_match(req_norm, extracted_all):
+                req_matched = True
+                break
+            # 3. Substring match on any alias form
+            if any(_substring_match(rf, extracted_all) for rf in req_forms):
+                req_matched = True
+                break
+            # 4. Word overlap (e.g., "ms excel (advanced)" vs "ms excel")
+            if any(word_overlap(req_norm, ext) for ext in extracted_all):
+                req_matched = True
+                break
 
-        unmatched.append(req)
+        if req_matched:
+            matched.append(req)
+        else:
+            unmatched.append(req)
 
     score = round((len(matched) / len(required_skills)) * 100, 2)
 
